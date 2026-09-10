@@ -1,0 +1,279 @@
+/* ===================================================================
+   FRZN - MAIN STYLESHEET
+   Global Resets, Typography, Viewports, Responsive Breakpoints & A11y
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--color-deep-navy);
+  color: var(--color-ice-white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto; /* Handled via custom physics smooth-scroll or native */
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--color-deep-navy);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Mobile navigation drawer hidden on desktop */
+.mobile-nav-drawer {
+  display: none;
+}
+
+/* Accessible focus states with translucent ice-blue outline */
+:focus-visible {
+  outline: 2px solid var(--color-ice-blue);
+  outline-offset: 3px;
+}
+
+/* Custom Ice Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-deep-navy);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-grey);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ice-blue);
+}
+
+/* Typography elements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  margin-top: 0;
+  color: var(--color-ice-white);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Subtle Ice Grid Background Lines */
+.grid-bg-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: 
+    linear-gradient(to right, rgba(62, 78, 92, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(62, 78, 92, 0.08) 1px, transparent 1px);
+  background-size: 100px 100px;
+}
+
+/* SPA Route Views Container */
+.spa-view {
+  display: none;
+  min-height: 80vh;
+}
+
+.spa-view.active {
+  display: block;
+}
+
+/* Dedicated views */
+.shop-page-view,
+.collections-page-view,
+.about-page-view,
+.contact-page-view {
+  padding-top: calc(var(--header-height) + 40px);
+  padding-bottom: 100px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* Breadcrumb & Subpage Header */
+.subpage-header {
+  margin-bottom: 50px;
+  border-bottom: var(--border-subtle);
+  padding-bottom: 24px;
+}
+
+.subpage-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--color-ice-blue);
+  text-transform: uppercase;
+}
+
+.subpage-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  text-transform: uppercase;
+  margin: 12px 0 0;
+}
+
+/* Contact & Info cards */
+.info-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.info-card {
+  background: var(--color-navy-card);
+  border: var(--border-subtle);
+  padding: 32px;
+  border-radius: 4px;
+}
+
+.info-card-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  color: var(--color-ice-blue);
+}
+
+.info-card-p {
+  font-family: var(--font-body);
+  color: var(--color-muted-white);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* ===================================================================
+   RESPONSIVE DESIGN (MOBILE-FIRST BREAKPOINTS AS PER FRZN.pdf)
+   Grid: 4 cols (desktop) -> 2 cols (tablet) -> 1 col (mobile)
+   =================================================================== */
+
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .footer-top-grid {
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 900px) {
+  .product-hero-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .info-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-top-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .nav-links {
+    display: none; /* In mobile, navigation can be toggled */
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .mobile-nav-drawer {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    background: rgba(15, 22, 32, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: var(--border-subtle);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transform: translateY(-110%);
+    transition: transform 0.3s var(--ease-ice-glaze);
+    z-index: 999;
+  }
+
+  .mobile-nav-drawer.is-open {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-height: 70px;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.4rem, 11vw, 3.8rem);
+  }
+
+  .hero-telemetry-row {
+    font-size: 0.65rem;
+  }
+
+  .product-showcase-left {
+    flex-direction: column-reverse;
+  }
+
+  .vertical-thumbs {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .thumb-btn {
+    width: 60px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .footer-bottom-row {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .manifesto-stats {
+    flex-direction: column;
+    gap: 24px;
+  }
+}

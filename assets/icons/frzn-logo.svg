@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 38" fill="none" class="brand-logo-svg">
+  <!-- F -->
+  <path d="M0 0H26.5V6.8H7.6V15.6H23.5V22.2H7.6V38H0V0Z" fill="#FFFFFF"/>
+  <!-- R -->
+  <path d="M34 0H56.5C65.5 0 71.5 4.5 71.5 12.2C71.5 17.6 68 21.3 62 22.8L73.5 38H63L52.8 23.8H41.6V38H34V0ZM41.6 6.8V17H55C59.8 17 63.5 15.2 63.5 12.2C63.5 9 59.8 6.8 55 6.8H41.6Z" fill="#FFFFFF"/>
+  <!-- Z -->
+  <path d="M78 0H112V6.8L89.5 31.2H113V38H78V31.2L100.5 6.8H78V0Z" fill="#FFFFFF"/>
+  <!-- N -->
+  <path d="M120 0H128.5L146.5 25.5V0H154V38H145.5L127.5 12.5V38H120V0Z" fill="#FFFFFF"/>
+  <!-- TM -->
+  <text x="157" y="11" font-family="'JetBrains Mono', 'Space Grotesk', monospace" font-size="9" font-weight="800" fill="#7A9BB5" letter-spacing="0">TM</text>
+</svg>

@@ -1,0 +1,333 @@
+/* ===================================================================
+   FRZN - ANIMATIONS & MICRO-INTERACTIONS (O CORE DO ANTIGRAVITY)
+   Exact Mathematical Curves, Ice Glaze, Shimmer, Refined Magnetic Cursor
+   =================================================================== */
+
+/* Ocultação do cursor nativo no desktop quando o cursor customizado está ativo */
+body.custom-cursor-enabled,
+body.custom-cursor-enabled * {
+  cursor: none !important;
+}
+
+/* --- Shimmer Effect (Carregamento Progressivo) --- */
+@keyframes iceShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-placeholder {
+  background: linear-gradient(
+    90deg,
+    #141D29 0%,
+    rgba(122, 155, 181, 0.18) 50%,
+    #141D29 100%
+  );
+  background-size: 200% 100%;
+  animation: iceShimmer 2.2s infinite ease-in-out;
+}
+
+/* --- Ice Glaze Fullscreen Page Transition --- */
+#ice-glaze-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(122, 155, 181, 0.35) 0%,
+    rgba(15, 22, 32, 0.88) 70%,
+    rgba(15, 22, 32, 0.98) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  will-change: backdrop-filter, opacity;
+}
+
+#ice-glaze-overlay.glaze-freezing {
+  pointer-events: auto;
+  opacity: 1;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: 
+    backdrop-filter var(--time-glaze-in) var(--ease-ice-glaze),
+    -webkit-backdrop-filter var(--time-glaze-in) var(--ease-ice-glaze),
+    opacity var(--time-glaze-in) var(--ease-ice-glaze);
+}
+
+#ice-glaze-overlay.glaze-thawing {
+  pointer-events: none;
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: 
+    backdrop-filter var(--time-glaze-out) ease-out,
+    -webkit-backdrop-filter var(--time-glaze-out) ease-out,
+    opacity var(--time-glaze-out) ease-out;
+}
+
+.glaze-crystallize {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-ice-blue);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: all 0.25s ease;
+}
+
+.glaze-freezing .glaze-crystallize {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* --- Magnetic Cursor Refinado (Desktop Apenas) --- */
+#frzn-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  background-color: var(--color-absolute-white);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  pointer-events: none !important;
+  z-index: 100000;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+}
+
+#frzn-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid rgba(122, 155, 181, 0.75);
+  box-shadow: 0 0 10px rgba(122, 155, 181, 0.25);
+  border-radius: 50%;
+  pointer-events: none !important;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 
+    width 0.22s var(--ease-ice-glaze),
+    height 0.22s var(--ease-ice-glaze),
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+  will-change: transform, width, height;
+}
+
+#frzn-cursor-ring.cursor-expanded {
+  width: 62px;
+  height: 62px;
+  border-color: var(--color-ice-blue);
+  background-color: rgba(122, 155, 181, 0.15);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 0 20px rgba(122, 155, 181, 0.4);
+}
+
+#frzn-cursor-ring.cursor-clicking {
+  width: 22px;
+  height: 22px;
+  border-color: var(--color-absolute-white);
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#frzn-cursor-ring .cursor-label {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-absolute-white);
+  opacity: 0;
+  transform: scale(0.65);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none !important;
+  user-select: none;
+  text-align: center;
+}
+
+#frzn-cursor-ring.cursor-expanded .cursor-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Desativação em touch/mobile */
+@media (hover: none) and (pointer: coarse) {
+  body.custom-cursor-enabled,
+  body.custom-cursor-enabled * {
+    cursor: auto !important;
+  }
+  #frzn-cursor-dot,
+  #frzn-cursor-ring {
+    display: none !important;
+  }
+}
+
+/* --- Scroll Reveal & Stagger Formula --- */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: 
+    opacity 0.7s var(--ease-ice-glaze),
+    transform 0.7s var(--ease-ice-glaze);
+  will-change: opacity, transform;
+}
+
+.reveal-item.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-1 { transition-delay: 0ms; }
+.stagger-2 { transition-delay: 75ms; }
+.stagger-3 { transition-delay: 150ms; }
+.stagger-4 { transition-delay: 225ms; }
+.stagger-5 { transition-delay: 300ms; }
+.stagger-6 { transition-delay: 375ms; }
+.stagger-7 { transition-delay: 450ms; }
+.stagger-8 { transition-delay: 525ms; }
+
+/* --- Micro-interações de Card de Produto --- */
+.product-card {
+  position: relative;
+  background-color: var(--color-navy-card);
+  border: var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-ice-card);
+  transition: 
+    box-shadow 0.4s var(--ease-ice-glaze),
+    border-color 0.4s var(--ease-ice-glaze),
+    transform 0.4s var(--ease-ice-glaze);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  border-color: rgba(122, 155, 181, 0.5);
+  box-shadow: var(--shadow-ice-hover);
+  transform: translateY(-4px);
+}
+
+.product-media-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: var(--color-deep-navy);
+}
+
+.product-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--time-zoom) var(--ease-product-zoom);
+  will-change: transform, opacity;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.08);
+}
+
+.product-img-studio {
+  opacity: 1;
+  z-index: 1;
+  transition: 
+    transform var(--time-zoom) var(--ease-product-zoom),
+    opacity var(--time-zoom) var(--ease-product-zoom);
+}
+
+.product-img-lifestyle {
+  opacity: 0;
+  z-index: 2;
+  transition: 
+    transform var(--time-zoom) var(--ease-product-zoom),
+    opacity var(--time-zoom) var(--ease-product-zoom);
+}
+
+.product-card:hover .product-img-studio {
+  opacity: 0;
+}
+
+.product-card:hover .product-img-lifestyle {
+  opacity: 1;
+}
+
+.product-quick-add {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: rgba(15, 22, 32, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(122, 155, 181, 0.35);
+  color: var(--color-ice-white);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: 
+    opacity var(--time-quick-add) var(--ease-quick-add),
+    transform var(--time-quick-add) var(--ease-quick-add),
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+  will-change: opacity, transform;
+}
+
+.product-card:hover .product-quick-add {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-quick-add:hover {
+  background: var(--color-ice-blue);
+  color: var(--color-deep-navy);
+  border-color: var(--color-ice-blue);
+}
+
+@keyframes icePulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.pulse-badge {
+  animation: icePulse 3s infinite ease-in-out;
+}

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRZN™ | Streetwear Técnico Ártico Urbano</title>
+  <meta name="description" content="Vestuário técnico de inverno e streetwear de luxo FRZN. Engenharia de alta altitude combinada com a cultura underground de Tóquio e Berlim. Construído para o Frio. Feito para as Alturas. Forjado para Durar.">
+  <meta name="theme-color" content="#0F1620">
+
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/frzn-logo.svg">
+
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- CSS Design System & Módulos -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="custom-cursor-enabled">
+
+  <!-- Grade de Fundo Sutil de Gelo -->
+  <div class="grid-bg-overlay" aria-hidden="true"></div>
+
+  <!-- Cursor Magnético Interativo Refinado (Desktop) -->
+  <div id="frzn-cursor-dot" aria-hidden="true"></div>
+  <div id="frzn-cursor-ring" aria-hidden="true">
+    <span class="cursor-label"></span>
+  </div>
+
+  <!-- Overlay de Transição de Página "Ice Glaze" Fullscreen -->
+  <div id="ice-glaze-overlay" aria-hidden="true">
+    <div class="glaze-crystallize">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+      </svg>
+      <span>FRZN™ CRISTALIZANDO // TRANSIÇÃO</span>
+    </div>
+  </div>
+
+  <!-- Header Fixo Sticky -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <!-- Logo da Marca Exato (Conforme Foto do Usuário) -->
+      <a href="#home" class="brand-logo" data-route="home" data-cursor-label="INÍCIO" aria-label="FRZN Início">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 38" fill="none" class="brand-logo-svg">
+          <path d="M0 0H26.5V6.8H7.6V15.6H23.5V22.2H7.6V38H0V0Z" fill="#FFFFFF"/>
+          <path d="M34 0H56.5C65.5 0 71.5 4.5 71.5 12.2C71.5 17.6 68 21.3 62 22.8L73.5 38H63L52.8 23.8H41.6V38H34V0ZM41.6 6.8V17H55C59.8 17 63.5 15.2 63.5 12.2C63.5 9 59.8 6.8 55 6.8H41.6Z" fill="#FFFFFF"/>
+          <path d="M78 0H112V6.8L89.5 31.2H113V38H78V31.2L100.5 6.8H78V0Z" fill="#FFFFFF"/>
+          <path d="M120 0H128.5L146.5 25.5V0H154V38H145.5L127.5 12.5V38H120V0Z" fill="#FFFFFF"/>
+          <text x="157" y="11" font-family="'JetBrains Mono', 'Space Grotesk', monospace" font-size="9" font-weight="800" fill="#7A9BB5">TM</text>
+        </svg>
+      </a>
+
+      <!-- Menu de Navegação Horizontal -->
+      <nav class="desktop-nav" aria-label="Navegação Principal">
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link active" data-route="home" data-cursor-label="MENU">Início</a></li>
+          <li><a href="#collections" class="nav-link" data-route="collections" data-cursor-label="MENU">Coleções</a></li>
+          <li><a href="#shop" class="nav-link" data-route="shop" data-cursor-label="MENU">Catálogo</a></li>
+          <li><a href="#about" class="nav-link" data-route="about" data-cursor-label="MENU">Manifesto</a></li>
+          <li><a href="#contact" class="nav-link" data-route="contact" data-cursor-label="MENU">Contato</a></li>
+        </ul>
+      </nav>
+
+      <!-- Ações: Busca, Conta, Carrinho / Sacola -->
+      <div class="header-actions">
+        <button type="button" class="icon-btn" id="btn-header-search" aria-label="Buscar Produtos" data-cursor-label="BUSCA">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <button type="button" class="icon-btn" id="btn-header-account" aria-label="Minha Conta" data-cursor-label="CONTA" onclick="window.frznApp.ui.showToast('FRZN ID: Autenticado // Servidor Tóquio')">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+
+        <button type="button" class="icon-btn" id="btn-header-cart" aria-label="Ver Sacola de Compras" data-cursor-label="SACOLA">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-badge" style="display: none;">0</span>
+        </button>
+
+        <!-- Botão Mobile Hamburger -->
+        <button type="button" class="icon-btn mobile-menu-btn" id="btn-mobile-menu" aria-label="Abrir Menu">
+          <svg viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menu Mobile Retrátil -->
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+      <a href="#home" class="nav-link mobile-nav-link active" data-route="home">Início</a>
+      <a href="#collections" class="nav-link mobile-nav-link" data-route="collections">Coleções</a>
+      <a href="#shop" class="nav-link mobile-nav-link" data-route="shop">Catálogo</a>
+      <a href="#about" class="nav-link mobile-nav-link" data-route="about">Manifesto</a>
+      <a href="#contact" class="nav-link mobile-nav-link" data-route="contact">Contato</a>
+    </div>
+  </header>
+
+  <!-- ===============================================================
+       SPA VIEW 1: HOME
+       =============================================================== -->
+  <main class="spa-view active" data-view="home" id="view-home">
+    
+    <!-- 1. Hero Section (Portão de Entrada) -->
+    <section class="hero-section" id="hero-entry">
+      <!-- Camada Parallax de Fundo Estática / Fluida Conforme Original -->
+      <div 
+        class="hero-parallax-bg parallax-bg" 
+        style="background-image: url('assets/images/hero_mountains.jpg');"
+        aria-hidden="true"
+      ></div>
+
+      <!-- Overlay Gradual Escuro -->
+      <div class="hero-gradient-overlay" aria-hidden="true"></div>
+
+      <!-- Camada 2: Intermediária Parallax (0.35x) com Telemetria e Graffiti Urbano -->
+      <div class="hero-parallax-mid parallax-mid" aria-hidden="true">
+        <div class="hero-telemetry-row">
+          <span>SISTEMA // VER 2.4.0</span>
+          <span>LAT 64° 08' N // LON 21° 56' O</span>
+          <span>SUB-ZERO // CLIMA EXTREMO</span>
+        </div>
+
+        <div class="hero-graffiti-stencil stencil-left">FRZN // 01</div>
+        <div class="hero-graffiti-stencil stencil-right">ALPINE SUB</div>
+
+        <div class="hero-telemetry-row">
+          <span>BERLIM // TÓQUIO // OSLO</span>
+          <span>COEFICIENTE TÉRMICO: 850+</span>
+        </div>
+      </div>
+
+      <!-- Camada 3: Conteúdo Central do Hero -->
+      <div class="hero-foreground">
+        <div class="hero-pre-badge reveal-item stagger-1">
+          <span class="pulse-badge" style="display:inline-block; width:6px; height:6px; background:var(--color-ice-blue); border-radius:50%;"></span>
+          ESPECIFICAÇÃO ÁRTICA URBANA
+        </div>
+
+        <h1 class="hero-title reveal-item stagger-2">
+          PONTO PRINCIPAL DE ENTRADA FRZN
+        </h1>
+
+        <p class="hero-subtitle reveal-item stagger-3">
+          A convergência do minimalismo alpino com a cultura de rua subterrânea de Berlim e Tóquio.
+          Blindagem térmica de alta performance forjada para temperaturas negativas.
+        </p>
+
+        <div class="reveal-item stagger-4">
+          <a href="#shop" class="cta-pill-btn" data-route="shop" data-cursor-label="EXPLORAR">
+            <span>Explorar Coleção</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Destaque de Coleção ("Arctic 01™" - Hero de Produto) -->
+    <section class="product-hero-section" id="product-hero">
+      <div class="product-hero-container">
+        
+        <!-- Coluna Esquerda: Showcase Interativo com Miniaturas Verticais -->
+        <div class="product-showcase-left reveal-item stagger-1">
+          <div class="vertical-thumbs" aria-label="Ângulos do Produto">
+            <button type="button" class="thumb-btn active" data-img-src="assets/images/arctic01_studio.jpg" data-cursor-label="ESTÚDIO" aria-label="Vista Estúdio">
+              <img src="assets/images/arctic01_studio.jpg" alt="Arctic 01 Estúdio">
+            </button>
+            <button type="button" class="thumb-btn" data-img-src="assets/images/arctic01_lifestyle.jpg" data-cursor-label="BERLIM" aria-label="Lookbook Berlim">
+              <img src="assets/images/arctic01_lifestyle.jpg" alt="Arctic 01 Lookbook">
+            </button>
+            <button type="button" class="thumb-btn" data-img-src="assets/images/arctic01_detail.jpg" data-cursor-label="DETALHE" aria-label="Detalhe Macro">
+              <img src="assets/images/arctic01_detail.jpg" alt="Arctic 01 Detalhe">
+            </button>
+          </div>
+
+          <div class="main-stage-wrapper" onclick="window.frznApp.ui.openProductModal('arctic-01')" data-cursor-label="EXPANDIR" style="cursor: pointer;">
+            <img 
+              id="hero-stage-img" 
+              src="assets/images/arctic01_studio.jpg" 
+              alt="Jaqueta Puffer Metálica Arctic 01™" 
+              class="stage-img is-visible"
+            >
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Narrativa, Seletor de Tamanho e Ações -->
+        <div class="product-details-right reveal-item stagger-2">
+          <div class="product-tech-tag">
+            <span class="pulse-badge" style="width: 8px; height: 8px; background: var(--color-ice-blue); border-radius: 50%;"></span>
+            PEÇA DESTAQUE // SÉRIE 01™
+          </div>
+
+          <h2 class="product-hero-title">
+            PUFFER METÁLICA ARCTIC 01™
+          </h2>
+
+          <div class="product-hero-price">
+            <span>R$ 6.890,00</span>
+            <span class="price-currency">BRL / IMPOSTOS INCLUSOS</span>
+          </div>
+
+          <p class="product-hero-desc">
+            Esculpida com acabamento metálico fosco congelado. Construída com membrana GORE-TEX Pro 3L, pluma de ganso ultra-seca certificada 850+, ajuste duplo magnético Fidlock na cintura e gola balística de retenção contra rajadas polares.
+          </p>
+
+          <!-- Seletor Dinâmico de Tamanho -->
+          <div class="size-selector-wrap">
+            <div class="size-header">
+              <span>SELECIONE O TAMANHO:</span>
+              <button type="button" class="size-guide-btn" onclick="window.frznApp.ui.showToast('Modelagem: Oversized Alpina')">Guia de Medidas</button>
+            </div>
+            <div class="size-options">
+              <button type="button" class="size-btn" data-size="PP" data-cursor-label="TAM">PP</button>
+              <button type="button" class="size-btn" data-size="P" data-cursor-label="TAM">P</button>
+              <button type="button" class="size-btn selected" data-size="M" data-cursor-label="TAM">M</button>
+              <button type="button" class="size-btn" data-size="G" data-cursor-label="TAM">G</button>
+              <button type="button" class="size-btn" data-size="GG" data-cursor-label="TAM">GG</button>
+              <button type="button" class="size-btn" data-size="XGG" data-cursor-label="TAM">XGG</button>
+            </div>
+          </div>
+
+          <!-- Botão Adicionar à Sacola -->
+          <div class="hero-actions-row">
+            <button type="button" class="btn-add-hero" id="btn-hero-add" data-cursor-label="COMPRAR">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>Adicionar à Sacola</span>
+            </button>
+          </div>
+
+          <!-- Grid de Especificações Técnicas -->
+          <div class="tech-spec-grid">
+            <div class="spec-item">
+              <span class="spec-key">MEMBRANA</span>
+              <span class="spec-val">GORE-TEX Pro 3L</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-key">ISOLAMENTO</span>
+              <span class="spec-val">Pluma 850+ Ganso</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-key">COLUNA D'ÁGUA</span>
+              <span class="spec-val">28.000mm Impermeável</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-key">FERRAGENS</span>
+              <span class="spec-val">Fidlock V-Buckles</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. Grid de Produtos Principal ("New Collection") -->
+    <section class="collection-section" id="new-collection">
+      <div class="section-header-row">
+        <div class="section-title-wrap">
+          <span class="section-eyebrow">NOVO ARQUIVO // DROP 01</span>
+          <h2 class="section-title">PEÇAS EM DESTAQUE</h2>
+        </div>
+
+        <div class="floating-filters-bar">
+          <button type="button" class="filter-btn active" data-category="all">Todas as Peças</button>
+          <button type="button" class="filter-btn" data-category="Casacos">Casacos</button>
+          <button type="button" class="filter-btn" data-category="Parkas">Parkas</button>
+          <button type="button" class="filter-btn" data-category="Calças">Calças</button>
+          <button type="button" class="filter-btn" data-category="Acessórios">Acessórios</button>
+        </div>
+      </div>
+
+      <!-- Grid Responsivo (4 colunas desktop -> 2 colunas tablet -> 1 mobile) -->
+      <div class="products-grid" id="home-products-grid">
+        <!-- Renderizado dinamicamente -->
+      </div>
+
+      <!-- Barra de Conexão do Catálogo (Otimiza o Espaço e Conecta à Próxima Seção) -->
+      <div class="catalog-strip-banner reveal-item">
+        <div class="catalog-strip-left">
+          <span class="catalog-strip-pill">SÉRIE 01 // DISPONÍVEL</span>
+          <span class="catalog-strip-text">ARQUIVO COMPLETO DE ALTA ALTITUDE</span>
+        </div>
+        <div class="catalog-strip-specs">
+          <span>GORE-TEX PRO</span>
+          <span>PLUMA 850+ GANSO</span>
+          <span>28.000MM IMPERMEÁVEL</span>
+          <span>FIDLOCK MAGNÉTICO</span>
+        </div>
+        <a href="#shop" class="catalog-strip-btn" data-route="shop" data-cursor-label="CATÁLOGO">
+          <span>VER CATÁLOGO COMPLETO (5 PEÇAS)</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. Brand Story (Manifesto) -->
+    <section class="manifesto-section" style="background-image: url('assets/images/hero_mountains.jpg');">
+      <div class="manifesto-overlay" aria-hidden="true"></div>
+      <div class="manifesto-container">
+        <span class="manifesto-tag reveal-item stagger-1">FILOSOFIA // ÁRTICO URBANO</span>
+
+        <h2 class="manifesto-quote reveal-item stagger-2">
+          "CONSTRUÍDO PARA O FRIO. <span>FEITO PARA AS ALTURAS.</span> FORJADO PARA DURAR."
+        </h2>
+
+        <p class="manifesto-text reveal-item stagger-3">
+          O FRZN existe no limite rigoroso onde a topografia alpina colide com as passagens subterrâneas de concreto brutalista de Berlim e Tóquio. Desenvolvemos peças não como tendências efêmeras, mas como escudos arquitetônicos contra condições polares e intempéries metropolitanas.
+        </p>
+
+        <div class="manifesto-stats reveal-item stagger-4">
+          <div class="stat-item">
+            <span class="stat-num">-45°C</span>
+            <span class="stat-desc">Proteção Térmica</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">28k</span>
+            <span class="stat-desc">Coluna d'Água (mm)</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-desc">Membrana Reciclada</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===============================================================
+       SPA VIEW 2: COLEÇÕES
+       =============================================================== -->
+  <section class="spa-view collections-page-view" data-view="collections" id="view-collections">
+    <header class="subpage-header">
+      <span class="subpage-tag">ARQUIVO DE COLEÇÕES</span>
+      <h1 class="subpage-title">TODAS AS COLEÇÕES</h1>
+      <p style="color: var(--color-muted-white); max-width: 600px; margin-top: 12px;">
+        Séries modulares projetadas para expedições polares e mobilidade urbana em baixas temperaturas.
+      </p>
+    </header>
+
+    <div class="info-cards-grid">
+      <div class="info-card">
+        <span class="spec-key">SÉRIE 01</span>
+        <h3 class="info-card-title">HARDSHELLS SUB-ZERO</h3>
+        <p class="info-card-p">Armaduras respiráveis ultraleves em Pertex Shield 3L, capuzes de tempestade ajustáveis e costuras soldadas a laser.</p>
+        <button class="filter-btn" onclick="window.frznApp.transitions.navigateTo('shop')" style="margin-top: 16px;">EXPLORAR LINHA</button>
+      </div>
+
+      <div class="info-card">
+        <span class="spec-key">SÉRIE 02</span>
+        <h3 class="info-card-title">PUFFERS METÁLICAS</h3>
+        <p class="info-card-p">Camadas metálicas foscas moldadas sobre plumas hidrorrepelentes 850+ para invernos rigorosos.</p>
+        <button class="filter-btn" onclick="window.frznApp.transitions.navigateTo('shop')" style="margin-top: 16px;">EXPLORAR LINHA</button>
+      </div>
+
+      <div class="info-card">
+        <span class="spec-key">SÉRIE 03</span>
+        <h3 class="info-card-title">CALÇAS TÁTICAS & CAPUZES</h3>
+        <p class="info-card-p">Calças técnicas em Schoeller® 4-way stretch, fivelas Fidlock e balaclavas com óculos magnéticos integrados.</p>
+        <button class="filter-btn" onclick="window.frznApp.transitions.navigateTo('shop')" style="margin-top: 16px;">EXPLORAR LINHA</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       SPA VIEW 3: CATÁLOGO / LOJA (COM FILTROS AO VIVO)
+       =============================================================== -->
+  <section class="spa-view shop-page-view" data-view="shop" id="view-shop">
+    <header class="subpage-header">
+      <span class="subpage-tag">INVENTÁRIO DISPONÍVEL</span>
+      <h1 class="subpage-title">CATÁLOGO COMPLETO</h1>
+      <div class="floating-filters-bar" style="margin-top: 24px;">
+        <button type="button" class="filter-btn active" data-category="all">Todas as Peças</button>
+        <button type="button" class="filter-btn" data-category="Casacos">Casacos</button>
+        <button type="button" class="filter-btn" data-category="Parkas">Parkas</button>
+        <button type="button" class="filter-btn" data-category="Calças">Calças</button>
+        <button type="button" class="filter-btn" data-category="Acessórios">Acessórios</button>
+      </div>
+    </header>
+
+    <div class="products-grid" id="shop-products-grid">
+      <!-- Povoado dinamicamente -->
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       SPA VIEW 4: MANIFESTO / SOBRE
+       =============================================================== -->
+  <section class="spa-view about-page-view" data-view="about" id="view-about">
+    <header class="subpage-header">
+      <span class="subpage-tag">ORIGENS DA MARCA & IDENTIDADE</span>
+      <h1 class="subpage-title">O MANIFESTO FRZN</h1>
+    </header>
+
+    <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; font-size: 1.05rem; line-height: 1.8; color: var(--color-muted-white);">
+      <p>
+        A <strong style="color: var(--color-ice-white);">FRZN</strong> nasceu da intersecção entre as cordilheiras gélidas de Svalbard e os subsolos de concreto brutalista de Kreuzberg e Shibuya. Nossa missão é criar vestuário técnico que recusa ciclos descartáveis em prol da engenharia de ponta e silhuetas imaculadas.
+      </p>
+      <p>
+        Cada costura é termosselada contra umidade extrema. Cada fecho é usinado em alumínio aeroespacial ou acionado com travas magnéticas patenteadas da alemã Fidlock. Não abrimos mão da integridade térmica e da autoridade estética das ruas.
+      </p>
+      <p>
+        Nossos materiais são desenvolvidos nas tecelagens técnicas mais avançadas do Japão, Suíça e Noruega, aliando membranas impermeáveis ecológicas e plumas de alta expansão de origem responsável.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       SPA VIEW 5: CONTATO & PÓLOS GLOBAIS
+       =============================================================== -->
+  <section class="spa-view contact-page-view" data-view="contact" id="view-contact">
+    <header class="subpage-header">
+      <span class="subpage-tag">PÓLOS GLOBAIS & SUPORTE</span>
+      <h1 class="subpage-title">CONTATO FRZN</h1>
+    </header>
+
+    <div class="info-cards-grid">
+      <div class="info-card">
+        <span class="spec-key">HQ // BERLIM</span>
+        <h3 class="info-card-title">KÖPENICKER STR. 124</h3>
+        <p class="info-card-p">Laboratório de Design & Espaço de Arquivo<br>10179 Berlim, Alemanha<br>contato.berlin@frzn-arctic.com</p>
+      </div>
+
+      <div class="info-card">
+        <span class="spec-key">LAB // TÓQUIO</span>
+        <h3 class="info-card-title">DAIKANYAMA 2-14</h3>
+        <p class="info-card-p">Pesquisa de Materiais & Protótipos<br>Shibuya-ku, Tóquio 150-0034<br>tokyo@frzn-arctic.com</p>
+      </div>
+
+      <div class="info-card">
+        <span class="spec-key">TESTES // TROMSØ</span>
+        <h3 class="info-card-title">LATITUDE POLAR 69°</h3>
+        <p class="info-card-p">Campo de Provas em Condições Extremas<br>9008 Tromsø, Noruega<br>expedition@frzn-arctic.com</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===============================================================
+       MODAL DE DETALHES DO PRODUTO (ENTRAR NO PRODUTO)
+       =============================================================== -->
+  <div class="product-modal-backdrop" id="product-modal-backdrop" aria-label="Detalhes do Produto">
+    <div class="product-modal-container">
+      <button type="button" class="product-modal-close" id="btn-close-product-modal" aria-label="Fechar Detalhes" data-cursor-label="FECHAR">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Coluna da Galeria -->
+      <div class="modal-gallery-col">
+        <div class="modal-main-image-wrap">
+          <img id="modal-main-img" src="" alt="Imagem Principal" class="modal-main-img">
+        </div>
+        <div class="modal-thumbs-row" id="modal-thumbs-row">
+          <!-- Miniaturas injetadas dinamicamente -->
+        </div>
+      </div>
+
+      <!-- Coluna de Informações -->
+      <div class="modal-info-col">
+        <span class="modal-category-tag" id="modal-category-tag"></span>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <div class="modal-price" id="modal-price"></div>
+        <p class="modal-desc" id="modal-desc"></p>
+
+        <!-- Especificações -->
+        <div class="modal-specs-list" id="modal-specs-list">
+          <!-- Especificações injetadas dinamicamente -->
+        </div>
+
+        <!-- Seletor de Tamanhos -->
+        <div class="size-selector-wrap">
+          <div class="size-header">
+            <span>SELECIONAR TAMANHO:</span>
+          </div>
+          <div class="size-options" id="modal-sizes-row">
+            <!-- Botões de tamanho injetados dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Botão Adicionar à Sacola -->
+        <button type="button" class="modal-add-btn" id="btn-modal-add" data-cursor-label="ADICIONAR">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Adicionar à Sacola</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================================================
+       DRAWER LATERAL DA SACOLA DE COMPRAS (CART)
+       =============================================================== -->
+  <div class="cart-drawer-backdrop" id="cart-backdrop" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Sacola de Compras">
+    <div class="cart-header">
+      <h3 class="cart-title">SACOLA DE EQUIPAMENTOS</h3>
+      <button type="button" class="close-btn" id="btn-close-cart" aria-label="Fechar Sacola" data-cursor-label="FECHAR">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Lista de Itens -->
+    <div class="cart-items-list" id="cart-items-container">
+      <!-- Povoado dinamicamente -->
+    </div>
+
+    <!-- Subtotal & Finalizar Compra -->
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-value" id="cart-subtotal-val">R$ 0,00</span>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-ice-blue); text-transform: uppercase;">
+        Frete Expresso Polar Gratuito para Todo o Brasil
+      </div>
+      <button type="button" class="checkout-btn" id="btn-checkout" data-cursor-label="PAGAR">
+        Finalizar Compra Segura
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===============================================================
+       MODAL DE BUSCA AO VIVO
+       =============================================================== -->
+  <div class="search-modal-backdrop" id="search-modal" aria-label="Modal de Busca">
+    <div class="search-modal-box">
+      <div class="search-input-wrap">
+        <input 
+          type="text" 
+          id="search-input" 
+          class="search-input" 
+          placeholder="BUSCAR EQUIPAMENTOS TÉCNICOS..." 
+          autocomplete="off"
+          aria-label="Buscar produtos"
+        >
+        <button type="button" class="close-btn" id="btn-close-search" aria-label="Fechar Busca">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="search-results-list" id="search-results"></div>
+    </div>
+  </div>
+
+  <!-- ===============================================================
+       RODAPÉ PREMIUM (FOOTER)
+       =============================================================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      
+      <!-- Newsletter Centralizada no Rodapé com a Linha de 1px -->
+      <div class="footer-newsletter-centered">
+        <span class="footer-newsletter-title">BOLETIM DA EXPEDIÇÃO ÁRTICA</span>
+        <form class="newsletter-form-centered" id="footer-newsletter-form" style="width: 100%;">
+          <div class="newsletter-line-group">
+            <input 
+              type="email" 
+              id="footer-newsletter-email" 
+              class="newsletter-line-input" 
+              placeholder="DIGITE SEU E-MAIL PARA ACESSO VIP" 
+              required
+              autocomplete="email"
+              aria-label="Digite seu e-mail para acesso VIP"
+            >
+            <button type="submit" class="newsletter-line-submit" data-cursor-label="ENVIAR">ENVIAR</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="footer-top-grid">
+        <!-- Coluna 1: Marca -->
+        <div class="footer-brand-col">
+          <a href="#home" class="brand-logo" data-route="home">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 38" fill="none" class="brand-logo-svg" style="height: 24px;">
+              <path d="M0 0H26.5V6.8H7.6V15.6H23.5V22.2H7.6V38H0V0Z" fill="#FFFFFF"/>
+              <path d="M34 0H56.5C65.5 0 71.5 4.5 71.5 12.2C71.5 17.6 68 21.3 62 22.8L73.5 38H63L52.8 23.8H41.6V38H34V0ZM41.6 6.8V17H55C59.8 17 63.5 15.2 63.5 12.2C63.5 9 59.8 6.8 55 6.8H41.6Z" fill="#FFFFFF"/>
+              <path d="M78 0H112V6.8L89.5 31.2H113V38H78V31.2L100.5 6.8H78V0Z" fill="#FFFFFF"/>
+              <path d="M120 0H128.5L146.5 25.5V0H154V38H145.5L127.5 12.5V38H120V0Z" fill="#FFFFFF"/>
+              <text x="157" y="11" font-family="'JetBrains Mono', 'Space Grotesk', monospace" font-size="9" font-weight="800" fill="#7A9BB5">TM</text>
+            </svg>
+          </a>
+          <p class="footer-brand-desc">
+            Ártico Urbano. Casacos e vestuário técnico de inverno projetados para climas sub-zero e metrópoles subterrâneas.
+          </p>
+        </div>
+
+        <!-- Coluna 2: Coleções -->
+        <div>
+          <h4 class="footer-col-title">COLEÇÕES</h4>
+          <ul class="footer-links-list">
+            <li><a href="#shop" data-route="shop">Série 01: Puffers Árticas</a></li>
+            <li><a href="#shop" data-route="shop">Série 02: Hardshells Alpinas</a></li>
+            <li><a href="#shop" data-route="shop">Série 03: Parkas Térmicas</a></li>
+            <li><a href="#shop" data-route="shop">Série 04: Calças Táticas Cargo</a></li>
+            <li><a href="#shop" data-route="shop">Série 05: Sistemas de Balaclava</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Engenharia & Cuidados -->
+        <div>
+          <h4 class="footer-col-title">ENGENHARIA</h4>
+          <ul class="footer-links-list">
+            <li><a href="#about" data-route="about">Padrões GORE-TEX Pro</a></li>
+            <li><a href="#about" data-route="about">Pluma Ética 850+ Ganso</a></li>
+            <li><a href="#about" data-route="about">Testes em Climas Sub-Zero</a></li>
+            <li><a href="#about" data-route="about">Guia de Manutenção e Reparo</a></li>
+            <li><a href="#about" data-route="about">Travas Magnéticas Fidlock</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 4: Rede Global & Legal -->
+        <div>
+          <h4 class="footer-col-title">REDE GLOBAL</h4>
+          <ul class="footer-links-list">
+            <li><a href="#contact" data-route="contact">Diretório de Lojas Parceiras</a></li>
+            <li><a href="#contact" data-route="contact">Envios & Devoluções</a></li>
+            <li><a href="#contact" data-route="contact">Garantia Técnica Vitalícia</a></li>
+            <li><a href="#contact" data-route="contact">Termos & Protocolos Árticos</a></li>
+            <li><a href="#contact" data-route="contact">Privacidade & Criptografia</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Linha Inferior com fonte 12px -->
+      <div class="footer-bottom-row">
+        <span>© 2026 FRZN ARCTIC URBANO AG. TODOS OS DIREITOS RESERVADOS.</span>
+        <span>LATITUDE 64° 08' N // TÓQUIO · BERLIM · OSLO</span>
+        <span>CORE WEB VITALS: OTIMIZADO PARA ANTIGRAVITY</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Principal da Aplicação -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
