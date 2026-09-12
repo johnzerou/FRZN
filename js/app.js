@@ -8,6 +8,7 @@ import { MagneticCursor } from './cursor.js';
 import { SmoothScrollEngine } from './smooth-scroll.js';
 import { PageTransitionEngine } from './transitions.js';
 import { UIManager } from './ui.js';
+import { GSAPAnimationEngine } from './gsap-engine.js';
 
 class FrznApplication {
   constructor() {
@@ -22,6 +23,9 @@ class FrznApplication {
     // Inicializa Motor de Rolagem Física & Parallax
     this.scroll = new SmoothScrollEngine();
 
+    // Inicializa Suíte de Animações GSAP + ScrollTrigger + Lenis
+    this.gsapEngine = new GSAPAnimationEngine();
+
     // Inicializa Cursor Magnético Interativo (Desktop)
     this.cursor = new MagneticCursor();
 
@@ -33,7 +37,7 @@ class FrznApplication {
     // Removendo placeholders de carregamento
     this.handleImagesLoaded();
 
-    console.log('%c FRZN™ %c ARCTIC URBANO // ONLINE ', 
+    console.log('%c FRZN™ %c ARCTIC URBANO // GSAP ONLINE ', 
       'background: #7A9BB5; color: #0F1620; font-weight: bold; padding: 4px 8px; border-radius: 2px;',
       'background: #0F1620; color: #F5F7FA; border: 1px solid #7A9BB5; padding: 4px 8px; border-radius: 2px;'
     );
@@ -43,10 +47,13 @@ class FrznApplication {
     if (route === 'shop') {
       this.ui.renderProductGrids();
     }
-    // Atualiza Intersection Observer para a nova rota
+    // Atualiza GSAP e ScrollTrigger para a nova rota
     setTimeout(() => {
       this.scroll.refreshReveal();
-    }, 100);
+      if (this.gsapEngine) {
+        this.gsapEngine.refresh();
+      }
+    }, 120);
   }
 
   handleImagesLoaded() {

@@ -15,5 +15,8 @@
     "e-commerce"
   ],
   "author": "FRZN™",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "gsap": "^3.15.0"
+  }
 }

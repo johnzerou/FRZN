@@ -1,8 +1,19 @@
-/* ===================================================================
-   FRZN - COMPONENTS & MODULES
-   Header, Cart Drawer, Product Detail Modal, Product Hero, Filters,
-   Hero Bottom Centered Newsletter & Exact Brand Logo Styling
-   =================================================================== */
+/* --- Lenis Smooth Scroll CSS Integration --- */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
 
 /* --- Brand Logo Styling (Conforme imagem do usuário) --- */
 .brand-logo {
