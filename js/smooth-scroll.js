@@ -1,26 +1,32 @@
 /* ===================================================================
-   FRZN - PHYSICAL SMOOTH SCROLL & PARALLAX ENGINE
-   Lerp factor: 0.08, Multi-layer Parallax (0.15x, 0.35x, 1.0x),
-   Mobile 50% parallax reduction & 75ms cumulative stagger reveal
+   FRZN - PHYSICAL SMOOTH SCROLL & MULTI-LAYER PARALLAX ENGINE
+   Multi-layer Parallax (Hero, Manifesto, Subpages & Cards),
+   3D Mouse Tilt Parallax & Cumulative Stagger Reveal
    =================================================================== */
 
 export class SmoothScrollEngine {
   constructor() {
     this.isMobile = window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches;
-    this.parallaxMultiplier = this.isMobile ? 0.5 : 1.0;
+    this.parallaxMultiplier = this.isMobile ? 0.3 : 1.0;
 
     this.currentY = window.scrollY;
     this.targetY = window.scrollY;
     this.lerpFactor = 0.08;
-    this.isScrolling = false;
 
     this.header = document.querySelector('.site-header');
-    // Apenas elementos absolutos internos de parallax para evitar deslocamento de seções
     this.heroBg = document.querySelector('.hero-parallax-bg');
     this.heroMid = document.querySelector('.hero-parallax-mid');
+    this.heroForeground = document.querySelector('.hero-foreground');
+    this.stencilLeft = document.querySelector('.stencil-left');
+    this.stencilRight = document.querySelector('.stencil-right');
+
+    this.manifestoSection = document.querySelector('.manifesto-section');
+    this.manifestoContainer = document.querySelector('.manifesto-container');
+    this.catalogStrip = document.querySelector('.catalog-strip-banner');
 
     this.init();
     this.initScrollReveal();
+    this.initCard3DTilt();
   }
 
   init() {
@@ -32,7 +38,7 @@ export class SmoothScrollEngine {
 
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches;
-      this.parallaxMultiplier = this.isMobile ? 0.5 : 1.0;
+      this.parallaxMultiplier = this.isMobile ? 0.3 : 1.0;
     });
 
     this.checkHeader();
@@ -49,17 +55,108 @@ export class SmoothScrollEngine {
   }
 
   updateParallax(scrollPos) {
-    // Parallax suave aplicado apenas ao fundo do Hero (não desloca o layout da página)
-    if (this.heroBg && scrollPos < window.innerHeight * 1.5) {
-      const bgOffset = scrollPos * 0.15 * this.parallaxMultiplier;
-      this.heroBg.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
+    const viewHeight = window.innerHeight;
+
+    // --- 1. HERO PARALLAX MULTICAMADA ---
+    if (scrollPos < viewHeight * 1.5) {
+      if (this.heroBg) {
+        const bgOffset = scrollPos * 0.18 * this.parallaxMultiplier;
+        this.heroBg.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
+      }
+
+      if (this.heroMid) {
+        const midOffset = scrollPos * 0.32 * this.parallaxMultiplier;
+        this.heroMid.style.transform = `translate3d(0, ${midOffset}px, 0)`;
+      }
+
+      if (this.stencilLeft) {
+        const leftOffset = scrollPos * 0.42 * this.parallaxMultiplier;
+        this.stencilLeft.style.transform = `translate3d(${leftOffset * 0.3}px, ${leftOffset}px, 0)`;
+      }
+
+      if (this.stencilRight) {
+        const rightOffset = scrollPos * -0.25 * this.parallaxMultiplier;
+        this.stencilRight.style.transform = `translate3d(${-rightOffset * 0.2}px, ${rightOffset}px, 0)`;
+      }
+
+      if (this.heroForeground) {
+        const fgOffset = scrollPos * 0.22 * this.parallaxMultiplier;
+        const opacity = Math.max(0, 1 - (scrollPos / (viewHeight * 0.85)));
+        this.heroForeground.style.transform = `translate3d(0, ${fgOffset}px, 0)`;
+        this.heroForeground.style.opacity = opacity.toFixed(2);
+      }
     }
 
-    // Telemetria intermediária do Hero
-    if (this.heroMid && scrollPos < window.innerHeight * 1.5) {
-      const midOffset = scrollPos * 0.35 * this.parallaxMultiplier;
-      this.heroMid.style.transform = `translate3d(0, ${midOffset}px, 0)`;
+    // --- 2. MANIFESTO SECTION PARALLAX ---
+    if (this.manifestoSection) {
+      const rect = this.manifestoSection.getBoundingClientRect();
+      if (rect.top < viewHeight && rect.bottom > 0) {
+        const sectionScroll = viewHeight - rect.top;
+        const bgY = (sectionScroll * 0.14 * this.parallaxMultiplier) - 40;
+        this.manifestoSection.style.backgroundPositionY = `calc(50% + ${bgY}px)`;
+
+        if (this.manifestoContainer && !this.isMobile) {
+          const containerY = (sectionScroll * 0.05 * this.parallaxMultiplier) - 15;
+          this.manifestoContainer.style.transform = `translate3d(0, ${-containerY}px, 0)`;
+        }
+      }
     }
+
+    // --- 3. CATALOG STRIP PARALLAX ---
+    if (this.catalogStrip) {
+      const stripRect = this.catalogStrip.getBoundingClientRect();
+      if (stripRect.top < viewHeight && stripRect.bottom > 0) {
+        const stripOffset = (viewHeight - stripRect.top) * 0.04 * this.parallaxMultiplier;
+        this.catalogStrip.style.transform = `translate3d(0, ${-stripOffset}px, 0)`;
+      }
+    }
+
+    // --- 4. SUBPAGE HEADERS PARALLAX ---
+    document.querySelectorAll('.subpage-header').forEach(header => {
+      const hRect = header.getBoundingClientRect();
+      if (hRect.top < viewHeight && hRect.bottom > 0) {
+        const hOffset = (viewHeight - hRect.top) * 0.06 * this.parallaxMultiplier;
+        header.style.transform = `translate3d(0, ${-hOffset}px, 0)`;
+      }
+    });
+  }
+
+  /* Efeito de Inclinação Parallax 3D para Cards ao Mover o Mouse (Desktop) */
+  initCard3DTilt() {
+    if (this.isMobile) return;
+
+    document.addEventListener('mousemove', (e) => {
+      const card = e.target.closest('.product-card, .info-card, .catalog-strip-banner');
+      if (!card) {
+        // Reset nos cards ativos anteriormente
+        document.querySelectorAll('.is-tilted').forEach(c => {
+          c.style.transform = '';
+          c.classList.remove('is-tilted');
+        });
+        return;
+      }
+
+      card.classList.add('is-tilted');
+      const rect = card.getBoundingClientRect();
+      const cardWidth = rect.width;
+      const cardHeight = rect.height;
+
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const rotateX = ((mouseY / cardHeight) - 0.5) * -12; // máx 6 deg
+      const rotateY = ((mouseX / cardWidth) - 0.5) * 12;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(8px)`;
+      card.style.transition = 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)';
+    });
+
+    document.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.is-tilted').forEach(c => {
+        c.style.transform = '';
+        c.classList.remove('is-tilted');
+      });
+    });
   }
 
   initScrollReveal() {

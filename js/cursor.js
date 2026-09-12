@@ -6,9 +6,13 @@
 
 export class MagneticCursor {
   constructor() {
-    this.isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    this.isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches || ('ontouchstart' in window && window.innerWidth <= 1024);
     if (this.isTouch) {
       document.body.classList.remove('custom-cursor-enabled');
+      const dot = document.getElementById('frzn-cursor-dot');
+      const ring = document.getElementById('frzn-cursor-ring');
+      if (dot) dot.style.display = 'none';
+      if (ring) ring.style.display = 'none';
       return;
     }
 

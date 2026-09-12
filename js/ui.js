@@ -64,6 +64,7 @@ export class UIManager {
     // Mobile nav
     this.mobileMenuBtn = document.getElementById('btn-mobile-menu');
     this.mobileDrawer = document.getElementById('mobile-nav-drawer');
+    this.mobileBackdrop = document.getElementById('mobile-nav-backdrop');
 
     // Newsletter forms
     this.heroNewsletterForm = document.getElementById('hero-newsletter-form');
@@ -136,11 +137,21 @@ export class UIManager {
     // Mobile Menu
     if (this.mobileMenuBtn && this.mobileDrawer) {
       this.mobileMenuBtn.addEventListener('click', () => {
-        this.mobileDrawer.classList.toggle('is-open');
+        const isOpen = this.mobileDrawer.classList.contains('is-open');
+        if (isOpen) {
+          this.closeMobileMenu();
+        } else {
+          this.openMobileMenu();
+        }
       });
+
+      if (this.mobileBackdrop) {
+        this.mobileBackdrop.addEventListener('click', () => this.closeMobileMenu());
+      }
+
       document.querySelectorAll('.mobile-nav-link').forEach(link => {
         link.addEventListener('click', () => {
-          this.mobileDrawer.classList.remove('is-open');
+          this.closeMobileMenu();
         });
       });
     }
@@ -360,6 +371,26 @@ export class UIManager {
       if (this.searchResults) {
         this.searchResults.innerHTML = '';
       }
+    }
+  }
+
+  openMobileMenu() {
+    if (this.mobileDrawer) {
+      this.mobileDrawer.classList.add('is-open');
+      if (this.mobileBackdrop) {
+        this.mobileBackdrop.classList.add('is-open');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeMobileMenu() {
+    if (this.mobileDrawer) {
+      this.mobileDrawer.classList.remove('is-open');
+      if (this.mobileBackdrop) {
+        this.mobileBackdrop.classList.remove('is-open');
+      }
+      document.body.style.overflow = '';
     }
   }
 

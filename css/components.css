@@ -776,8 +776,31 @@
 .floating-filters-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .floating-filters-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 8px;
+    padding-top: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .floating-filters-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 10px 20px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 .filter-btn {
@@ -793,7 +816,8 @@
   transition: all 0.25s var(--ease-ice-glaze);
 }
 
-.filter-btn:hover {
+.filter-btn:hover,
+.filter-btn:active {
   color: var(--color-ice-white);
   border-color: rgba(122, 155, 181, 0.4);
 }
@@ -1604,16 +1628,86 @@
   color: var(--color-subtle-white);
 }
 
+/* ===================================================================
+   RESPONSIVE MODAL & MOBILE UX OVERRIDES (POLEGAR & TOUCH TARGETS)
+   =================================================================== */
+
 @media (max-width: 800px) {
+  .product-modal-backdrop {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
   .product-modal-container {
     grid-template-columns: 1fr;
-    max-height: 95vh;
+    max-height: 92vh;
+    border-radius: 12px 12px 0 0;
   }
+
+  .product-modal-close {
+    position: sticky;
+    top: 12px;
+    right: 12px;
+    float: right;
+    width: 44px;
+    height: 44px;
+    z-index: 20;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+
   .modal-gallery-col {
     border-right: none;
     border-bottom: var(--border-subtle);
+    padding: 16px;
   }
+
   .modal-info-col {
-    padding: 24px;
+    padding: 20px 16px 28px;
+  }
+
+  .modal-thumbs-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 640px) {
+  .cart-drawer {
+    width: 100%;
+    max-width: 100%;
+    border-left: none;
+  }
+
+  .cart-header {
+    padding: 18px 20px;
+  }
+
+  .cart-items-list {
+    padding: 16px 20px;
+  }
+
+  .cart-footer {
+    padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .search-modal-backdrop {
+    padding-top: 24px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .search-input {
+    font-size: 1.15rem;
+  }
+
+  #toast-container {
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .toast {
+    width: 100%;
+    justify-content: center;
   }
 }
