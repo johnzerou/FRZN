@@ -48,13 +48,13 @@ export class PageTransitionEngine {
       return;
     }
 
-    // FASE 1: Entrada do congelamento (0ms a 300ms)
+    // FASE 1: Fade-out / Dissolve da rota atual (0ms a 250ms cubic-bezier(0.25, 1, 0.5, 1))
     this.overlay.className = '';
     // Força reflow
     void this.overlay.offsetWidth;
     this.overlay.classList.add('glaze-freezing');
 
-    // Ao atingir 300ms, altera a visão DOM e inicia o descongelamento
+    // Ao atingir 250ms, altera a visão DOM e inicia o fade-in / mount
     setTimeout(() => {
       this.executeRouteSwitch(route);
       window.scrollTo({ top: 0, behavior: 'instant' });
@@ -63,15 +63,15 @@ export class PageTransitionEngine {
         history.pushState({ route }, '', `#${route}`);
       }
 
-      // FASE 2: Saída do congelamento (Revelação da nova página: 300ms a 650ms = 350ms de duração)
+      // FASE 2: Fade-in / Mount da nova rota (250ms a 550ms = 300ms de duração)
       this.overlay.classList.remove('glaze-freezing');
       this.overlay.classList.add('glaze-thawing');
 
       setTimeout(() => {
         this.overlay.classList.remove('glaze-thawing');
         this.isTransitioning = false;
-      }, 350);
-    }, 300);
+      }, 300);
+    }, 250);
   }
 
   executeRouteSwitch(route) {

@@ -1711,3 +1711,167 @@
     justify-content: center;
   }
 }
+
+/* ===================================================================
+   FRZN2.pdf REFINEMENTS & EXTENSIONS
+   Size Lock CTA, Sticky Horizontal Scroll Cards & Newsletter Feedback
+   =================================================================== */
+
+/* Size Security Lock & Translucent CTA (FRZN2.pdf Page 2/4) */
+.btn-add-hero.is-locked,
+.modal-add-btn.is-locked {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+  cursor: not-allowed !important;
+  background: var(--color-navy-card) !important;
+  color: var(--color-subtle-white) !important;
+  border: 1px dashed var(--color-slate-grey) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Horizontal Scroll Section for Campaigns & Collections (FRZN2.pdf Page 3) */
+.horizontal-collections-section {
+  position: relative;
+  background-color: var(--color-navy-surface);
+  border-top: var(--border-subtle);
+  border-bottom: var(--border-subtle);
+  padding: clamp(60px, 8vw, 90px) 0;
+  overflow: hidden;
+}
+
+.horizontal-section-header {
+  max-width: var(--max-width);
+  margin: 0 auto 32px;
+  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.horizontal-track-container {
+  width: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0 32px;
+}
+
+.horizontal-track-container::-webkit-scrollbar {
+  display: none;
+}
+
+.horizontal-track {
+  display: flex;
+  gap: 28px;
+  width: max-content;
+  padding-bottom: 20px;
+}
+
+.campaign-card {
+  position: relative;
+  width: clamp(300px, 32vw, 440px);
+  height: clamp(400px, 50vh, 540px);
+  border-radius: 4px;
+  overflow: hidden;
+  border: var(--border-subtle);
+  background-color: var(--color-navy-card);
+  transition: transform 0.4s var(--ease-ice-glaze), border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-ice-card);
+  flex-shrink: 0;
+}
+
+.campaign-card:hover {
+  border-color: var(--color-ice-blue);
+  box-shadow: var(--shadow-ice-hover);
+  transform: translateY(-6px);
+}
+
+.campaign-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.8s var(--ease-product-zoom);
+}
+
+.campaign-card:hover .campaign-card-bg {
+  transform: scale(1.06);
+}
+
+.campaign-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 22, 32, 0.95) 0%, rgba(15, 22, 32, 0.35) 60%, transparent 100%);
+}
+
+.campaign-card-content {
+  position: absolute;
+  inset: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 2;
+}
+
+.campaign-card-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--color-ice-blue);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.campaign-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  color: var(--color-absolute-white);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.campaign-card-desc {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  color: var(--color-muted-white);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.campaign-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-ice-white);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.campaign-card:hover .campaign-card-link {
+  color: var(--color-ice-blue);
+  transform: translateX(4px);
+}
+
+/* Newsletter Feedback Error/Success (FRZN2.pdf Page 3) */
+.newsletter-feedback {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+.newsletter-feedback.error {
+  color: #ff6b6b;
+}
+.newsletter-feedback.success {
+  color: var(--color-ice-blue);
+}

@@ -11,7 +11,7 @@ export class SmoothScrollEngine {
 
     this.currentY = window.scrollY;
     this.targetY = window.scrollY;
-    this.lerpFactor = 0.08;
+    this.lerpFactor = 0.07; // FRZN2.pdf Page 3
 
     this.header = document.querySelector('.site-header');
     this.heroBg = document.querySelector('.hero-parallax-bg');
@@ -57,52 +57,64 @@ export class SmoothScrollEngine {
   updateParallax(scrollPos) {
     const viewHeight = window.innerHeight;
 
-    // --- 1. HERO PARALLAX MULTICAMADA ---
+    // --- 1. HERO PARALLAX MULTICAMADA (FRZN2.pdf: Fundo 0.12x, Texto 1.0x) ---
     if (scrollPos < viewHeight * 1.5) {
       if (this.heroBg) {
-        const bgOffset = scrollPos * 0.18 * this.parallaxMultiplier;
+        const bgOffset = scrollPos * 0.12 * this.parallaxMultiplier; // 0.12x conforme FRZN2
         this.heroBg.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
       }
 
       if (this.heroMid) {
-        const midOffset = scrollPos * 0.32 * this.parallaxMultiplier;
+        const midOffset = scrollPos * 0.28 * this.parallaxMultiplier;
         this.heroMid.style.transform = `translate3d(0, ${midOffset}px, 0)`;
       }
 
       if (this.stencilLeft) {
-        const leftOffset = scrollPos * 0.42 * this.parallaxMultiplier;
-        this.stencilLeft.style.transform = `translate3d(${leftOffset * 0.3}px, ${leftOffset}px, 0)`;
+        const leftOffset = scrollPos * 0.35 * this.parallaxMultiplier;
+        this.stencilLeft.style.transform = `translate3d(${leftOffset * 0.2}px, ${leftOffset}px, 0)`;
       }
 
       if (this.stencilRight) {
-        const rightOffset = scrollPos * -0.25 * this.parallaxMultiplier;
-        this.stencilRight.style.transform = `translate3d(${-rightOffset * 0.2}px, ${rightOffset}px, 0)`;
+        const rightOffset = scrollPos * -0.2 * this.parallaxMultiplier;
+        this.stencilRight.style.transform = `translate3d(${-rightOffset * 0.15}px, ${rightOffset}px, 0)`;
       }
 
       if (this.heroForeground) {
-        const fgOffset = scrollPos * 0.22 * this.parallaxMultiplier;
+        const fgOffset = scrollPos * 0.15 * this.parallaxMultiplier;
         const opacity = Math.max(0, 1 - (scrollPos / (viewHeight * 0.85)));
         this.heroForeground.style.transform = `translate3d(0, ${fgOffset}px, 0)`;
         this.heroForeground.style.opacity = opacity.toFixed(2);
       }
     }
 
-    // --- 2. MANIFESTO SECTION PARALLAX ---
+    // --- 2. SEÇÃO DE COLEÇÕES EM SCROLL HORIZONTAL STICKY (FRZN2.pdf Page 3) ---
+    const horizSection = document.getElementById('horizontal-collections');
+    const horizContainer = document.getElementById('horizontal-track-container');
+    if (horizSection && horizContainer) {
+      const hRect = horizSection.getBoundingClientRect();
+      if (hRect.top < viewHeight && hRect.bottom > 0) {
+        const scrollRatio = Math.max(0, Math.min(1, (viewHeight - hRect.top) / (viewHeight + hRect.height)));
+        const maxScroll = horizContainer.scrollWidth - horizContainer.clientWidth;
+        horizContainer.scrollLeft = scrollRatio * maxScroll;
+      }
+    }
+
+    // --- 3. MANIFESTO SECTION PARALLAX ---
     if (this.manifestoSection) {
       const rect = this.manifestoSection.getBoundingClientRect();
       if (rect.top < viewHeight && rect.bottom > 0) {
         const sectionScroll = viewHeight - rect.top;
-        const bgY = (sectionScroll * 0.14 * this.parallaxMultiplier) - 40;
+        const bgY = (sectionScroll * 0.12 * this.parallaxMultiplier) - 40; // 0.12x conforme FRZN2
         this.manifestoSection.style.backgroundPositionY = `calc(50% + ${bgY}px)`;
 
         if (this.manifestoContainer && !this.isMobile) {
-          const containerY = (sectionScroll * 0.05 * this.parallaxMultiplier) - 15;
+          const containerY = (sectionScroll * 0.04 * this.parallaxMultiplier) - 10;
           this.manifestoContainer.style.transform = `translate3d(0, ${-containerY}px, 0)`;
         }
       }
     }
 
-    // --- 3. CATALOG STRIP PARALLAX ---
+    // --- 4. CATALOG STRIP PARALLAX ---
     if (this.catalogStrip) {
       const stripRect = this.catalogStrip.getBoundingClientRect();
       if (stripRect.top < viewHeight && stripRect.bottom > 0) {
@@ -111,7 +123,7 @@ export class SmoothScrollEngine {
       }
     }
 
-    // --- 4. SUBPAGE HEADERS PARALLAX ---
+    // --- 5. SUBPAGE HEADERS PARALLAX ---
     document.querySelectorAll('.subpage-header').forEach(header => {
       const hRect = header.getBoundingClientRect();
       if (hRect.top < viewHeight && hRect.bottom > 0) {

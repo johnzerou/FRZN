@@ -8,8 +8,8 @@ import { store, PRODUCTS } from './store.js';
 
 export class UIManager {
   constructor() {
-    this.selectedHeroSize = 'M';
-    this.modalSelectedSize = 'M';
+    this.selectedHeroSize = null; // FRZN2.pdf Trava de segurança: nulo por padrão
+    this.modalSelectedSize = null;
     this.activeFilter = 'all';
     this.activeSort = 'featured';
 
@@ -53,7 +53,7 @@ export class UIManager {
     // Hero Arctic 01
     this.heroMainImg = document.getElementById('hero-stage-img');
     this.heroThumbBtns = document.querySelectorAll('.thumb-btn');
-    this.heroSizeBtns = document.querySelectorAll('.size-btn');
+    this.heroSizeBtns = document.querySelectorAll('#hero-size-options .size-btn');
     this.btnHeroAdd = document.getElementById('btn-hero-add');
 
     // Grids e Filtros
@@ -67,8 +67,6 @@ export class UIManager {
     this.mobileBackdrop = document.getElementById('mobile-nav-backdrop');
 
     // Newsletter forms
-    this.heroNewsletterForm = document.getElementById('hero-newsletter-form');
-    this.heroNewsletterInput = document.getElementById('hero-newsletter-email');
     this.footerNewsletterForm = document.getElementById('footer-newsletter-form');
     this.footerNewsletterInput = document.getElementById('footer-newsletter-email');
   }
@@ -107,9 +105,9 @@ export class UIManager {
           this.showToast('Sua sacola ártica está vazia.');
           return;
         }
-        this.showToast('Conectando ao Checkout Ártico Criptografado...');
+        this.showToast('Conectando ao Checkout Criptografado FRZN...');
         setTimeout(() => {
-          this.showToast('Pedido confirmado com sucesso! Rastreamento enviado.');
+          this.showToast('Pedido confirmado com sucesso! Rastreamento de envio gerado.');
           store.clearCart();
           this.closeCart();
         }, 1400);
@@ -172,7 +170,7 @@ export class UIManager {
       }
     }
 
-    // Miniaturas do Hero Arctic 01™ - Crossfade instantâneo
+    // Miniaturas do Hero FRZN-01 - Crossfade instantâneo
     if (this.heroThumbBtns.length > 0 && this.heroMainImg) {
       this.heroThumbBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -191,22 +189,35 @@ export class UIManager {
       });
     }
 
-    // Seletor de Tamanho do Hero
+    // Seletor de Tamanho do Hero com Trava de Segurança (FRZN2.pdf Page 2 & Page 4)
     if (this.heroSizeBtns.length > 0) {
       this.heroSizeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           this.heroSizeBtns.forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
-          this.selectedHeroSize = btn.getAttribute('data-size') || 'M';
+          this.selectedHeroSize = btn.getAttribute('data-size');
+
+          // Libera a trava do botão "Adicionar ao Carrinho"
+          if (this.btnHeroAdd) {
+            this.btnHeroAdd.classList.remove('is-locked');
+            const btnText = document.getElementById('btn-hero-add-text');
+            if (btnText) {
+              btnText.textContent = `ADICIONAR AO CARRINHO — TAM ${this.selectedHeroSize}`;
+            }
+          }
         });
       });
     }
 
-    // Botão Adicionar do Hero Arctic 01™
+    // Botão Adicionar do Hero FRZN-01
     if (this.btnHeroAdd) {
       this.btnHeroAdd.addEventListener('click', () => {
+        if (!this.selectedHeroSize) {
+          this.showToast('Selecione formalmente uma opção de tamanho (P, M, G, GG) para continuar');
+          return;
+        }
         store.addToCart('arctic-01', this.selectedHeroSize, 1);
-        this.showToast(`Puffer Arctic 01™ (Tam. ${this.selectedHeroSize}) adicionada à sacola`);
+        this.showToast(`FRZN-01 Arctic Down Parka (Tam. ${this.selectedHeroSize}) adicionada à sacola`);
         this.openCart();
       });
     }
@@ -221,26 +232,30 @@ export class UIManager {
       });
     });
 
-    // Formulários de Newsletter (Hero e Rodapé)
-    const handleNewsletterSubmit = (inputEl) => {
-      const email = inputEl ? inputEl.value.trim() : '';
-      if (email) {
-        this.showToast('ACESSO VIP CONCEDIDO: Inscrito nos lançamentos árticos');
-        inputEl.value = '';
-      }
-    };
-
-    if (this.heroNewsletterForm) {
-      this.heroNewsletterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        handleNewsletterSubmit(this.heroNewsletterInput);
-      });
-    }
-
+    // Formulário de Newsletter com Validação (FRZN2.pdf Page 3)
     if (this.footerNewsletterForm) {
       this.footerNewsletterForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        handleNewsletterSubmit(this.footerNewsletterInput);
+        const input = this.footerNewsletterInput;
+        const feedback = document.getElementById('newsletter-feedback');
+        const email = input ? input.value.trim() : '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!email || !emailRegex.test(email)) {
+          if (feedback) {
+            feedback.textContent = 'Endereço de e-mail inválido';
+            feedback.className = 'newsletter-feedback error';
+          }
+          this.showToast('Endereço de e-mail inválido');
+          return;
+        }
+
+        if (feedback) {
+          feedback.textContent = 'Inscrição confirmada no boletim técnico FRZN';
+          feedback.className = 'newsletter-feedback success';
+        }
+        this.showToast('Inscrição confirmada no boletim técnico FRZN');
+        if (input) input.value = '';
       });
     }
 
@@ -260,7 +275,7 @@ export class UIManager {
     if (!product || !this.productModalBackdrop) return;
 
     this.currentModalProduct = product;
-    this.modalSelectedSize = product.sizes[0] || 'M';
+    this.modalSelectedSize = null; // Trava de segurança FRZN2.pdf
 
     // Imagem principal
     if (this.modalMainImg) {
@@ -285,7 +300,7 @@ export class UIManager {
 
     // Informações textuais
     if (this.modalCategoryTag) {
-      this.modalCategoryTag.textContent = `${product.category} // ${product.badge}`;
+      this.modalCategoryTag.textContent = `${product.category} · ${product.badge}`;
     }
     if (this.modalTitle) {
       this.modalTitle.textContent = product.name;
@@ -307,16 +322,24 @@ export class UIManager {
       `).join('');
     }
 
-    // Tamanhos
+    // Tamanhos (nenhum pré-selecionado por padrão)
     if (this.modalSizesRow) {
-      this.modalSizesRow.innerHTML = product.sizes.map((sz, i) => `
-        <button type="button" class="size-btn ${i === 0 ? 'selected' : ''}" data-size="${sz}" onclick="window.frznApp.ui.selectModalSize('${sz}', this)" data-cursor-label="TAM">${sz}</button>
+      this.modalSizesRow.innerHTML = product.sizes.map(sz => `
+        <button type="button" class="size-btn" data-size="${sz}" onclick="window.frznApp.ui.selectModalSize('${sz}', this)" data-cursor-label="TAM">${sz}</button>
       `).join('');
     }
 
-    // Botão Adicionar do Modal
+    // Botão Adicionar do Modal com trava inicial
     if (this.modalAddBtn) {
+      this.modalAddBtn.classList.add('is-locked');
+      const span = this.modalAddBtn.querySelector('span');
+      if (span) span.textContent = 'SELECIONE O TAMANHO';
+
       this.modalAddBtn.onclick = () => {
+        if (!this.modalSelectedSize) {
+          this.showToast('Selecione formalmente uma opção de tamanho para continuar');
+          return;
+        }
         store.addToCart(product.id, this.modalSelectedSize, 1);
         this.showToast(`${product.name} (Tam. ${this.modalSelectedSize}) adicionada à sacola`);
         this.closeProductModal();
@@ -344,6 +367,12 @@ export class UIManager {
     this.modalSelectedSize = size;
     document.querySelectorAll('#modal-sizes-row .size-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
+
+    if (this.modalAddBtn) {
+      this.modalAddBtn.classList.remove('is-locked');
+      const span = this.modalAddBtn.querySelector('span');
+      if (span) span.textContent = `ADICIONAR À SACOLA — TAM ${size}`;
+    }
   }
 
   closeProductModal() {

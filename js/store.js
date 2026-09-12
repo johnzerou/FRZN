@@ -6,7 +6,7 @@
 export const PRODUCTS = [
   {
     id: 'arctic-01',
-    name: 'Puffer Metálica Arctic 01™',
+    name: 'FRZN-01 Arctic Down Parka',
     category: 'Casacos',
     price: 6890,
     currency: 'R$',
@@ -14,13 +14,13 @@ export const PRODUCTS = [
     studioImg: 'assets/images/arctic01_studio.jpg',
     lifestyleImg: 'assets/images/arctic01_lifestyle.jpg',
     detailImg: 'assets/images/arctic01_detail.jpg',
-    sizes: ['PP', 'P', 'M', 'G', 'GG', 'XGG'],
-    badge: 'FLAGSHIP // LIMITADO',
-    tagline: 'GORE-TEX Pro // Pluma de Ganso 850+ // Fivelas Fidlock',
-    description: 'A expressão definitiva do luxo técnico Ártico Urbano. Esculpida com acabamento metálico fosco congelado, câmaras de isolamento articuladas, fivelas duplas magnéticas Fidlock na cintura e retenção térmica certificada para até -40°C.',
+    sizes: ['PP', 'P', 'M', 'G', 'GG'],
+    badge: 'FLAGSHIP · EDIÇÃO LIMITADA',
+    tagline: '3L GORE-TEX Pro · Pluma de Ganso 850+ · Fivelas Fidlock',
+    description: 'A expressão definitiva do luxo técnico Ártico Urbano. Esculpida com acabamento metálico fosco congelado, câmaras de isolamento articuladas, fivelas duplas magnéticas Fidlock V-Buckle na cintura e retenção térmica certificada para até -40°C.',
     specs: {
       'Isolamento': 'Pluma de Ganso Ultra-Seca 850+',
-      'Membrana': 'GORE-TEX Pro 3L Impermeável',
+      'Membrana': '3L GORE-TEX Pro Impermeável',
       'Impermeabilidade': 'Coluna d\'água de 28.000mm',
       'Ferragens': 'Fivelas Magnéticas Fidlock V-Buckle'
     }
@@ -36,8 +36,8 @@ export const PRODUCTS = [
     lifestyleImg: 'assets/images/subzero_lifestyle.jpg',
     detailImg: 'assets/images/subzero_studio.jpg',
     sizes: ['P', 'M', 'G', 'GG'],
-    badge: 'ALTA MONTANHA',
-    tagline: 'Costuras Seladas Ice Blue // Capuz de Tempestade // YKK AquaGuard',
+    badge: 'ALTA MONTANHA · SUB-ZERO',
+    tagline: 'Costuras Seladas Ice Blue · Capuz de Tempestade · YKK AquaGuard',
     description: 'Projetada para nevascas extremas e expedições urbanas noturnas. Padrão ergonômico com fita de vedação reflexiva soldada a laser na cor azul-gelo, cotovelos pré-articulados e capuz de tempestade ajustável em 3 pontos.',
     specs: {
       'Membrana': 'Pertex Shield 3L Respirável',
@@ -58,7 +58,7 @@ export const PRODUCTS = [
     detailImg: 'assets/images/vortex_studio.jpg',
     sizes: ['PP', 'P', 'M', 'G', 'GG'],
     badge: 'ESPECIFICAÇÃO EXPEDIÇÃO',
-    tagline: 'Comprimento Estendido // Escudo Térmico // Aba Magnética Dupla',
+    tagline: 'Comprimento Estendido · Escudo Térmico · Aba Magnética Dupla',
     description: 'Arquitetura subterrânea para temperaturas negativas. Uma parka longa técnica em Cordura branca com painéis de reforço grafite, abas de tempestade magnéticas de acionamento rápido e preenchimento integral em pluma termorrefletora.',
     specs: {
       'Resistência': 'Certificada até -45°C Sub-Zero',
@@ -79,8 +79,8 @@ export const PRODUCTS = [
     detailImg: 'assets/images/cargo_studio.jpg',
     sizes: ['38', '40', '42', '44', '46'],
     badge: 'TECHWEAR MODULAR',
-    tagline: 'Joelhos Articulados // Tiras de Tensão Ice-Blue // Acabamento DWR',
-    description: 'Criada para mobilidade urbana fluida em climas gélidos. Fabricada em tecido softshell técnico schoeller® com elasticidade quadridirecional, bolsos cargo magnéticos e fitas de tensão ajustáveis em azul-gelo.',
+    tagline: 'Joelhos Articulados · Tiras de Tensão Ice-Blue · Acabamento DWR',
+    description: 'Criada para mobilidade urbana fluida em climas gélidos. Fabricada em tecido softshell técnico Schoeller® com elasticidade quadridirecional, bolsos cargo magnéticos e fitas de tensão ajustáveis em azul-gelo.',
     specs: {
       'Tecido': 'Schoeller® Softshell 4-Way Stretch',
       'Bolsos': 'Configuração Modular com 6 Compartimentos',
@@ -99,8 +99,8 @@ export const PRODUCTS = [
     lifestyleImg: 'assets/images/balaclava_lifestyle.jpg',
     detailImg: 'assets/images/balaclava_studio.jpg',
     sizes: ['TAMANHO ÚNICO'],
-    badge: 'CYBER ÁRTICO',
-    tagline: 'Lente Magnética Polarizada // Fleece Corta-Vento // Antiembaçante',
+    badge: 'PROTEÇÃO ÁRTICA',
+    tagline: 'Lente Magnética Polarizada · Fleece Corta-Vento · Antiembaçante',
     description: 'Blindagem facial total contra tempestades de gelo. Balaclava de compressão térmica sem costuras integrada a óculos cilíndricos de neve com fixação magnética e lentes polarizadas de alta definição.',
     specs: {
       'Lente': 'Espelhada Ice Blue Polarizada VLT 14%',
