@@ -98,19 +98,14 @@ export class UIManager {
       });
     }
 
-    // Finalizar Compra Simulado
+    // Finalizar Compra -> Acessa o Modal de Checkout Profissional
     if (this.checkoutBtn) {
       this.checkoutBtn.addEventListener('click', () => {
         if (store.getCartCount() === 0) {
           this.showToast('Sua sacola ártica está vazia.');
           return;
         }
-        this.showToast('Finalizando seu pedido FRZN...');
-        setTimeout(() => {
-          this.showToast('Pedido confirmado com sucesso! Rastreamento de envio gerado.');
-          store.clearCart();
-          this.closeCart();
-        }, 1400);
+        this.openCheckoutModal();
       });
     }
 
@@ -307,8 +302,25 @@ export class UIManager {
     const handle = document.getElementById('photo-slider-handle');
     if (!slider || !afterImg || !handle) return;
 
+    const afterImgTag = afterImg.querySelector('img');
+
+    const setInnerImgWidth = () => {
+      const rect = slider.getBoundingClientRect();
+      if (afterImgTag) {
+        afterImgTag.style.width = `${rect.width}px`;
+        afterImgTag.style.minWidth = `${rect.width}px`;
+      }
+    };
+
+    setInnerImgWidth();
+    window.addEventListener('resize', setInnerImgWidth);
+
     const updateSlider = (clientX) => {
       const rect = slider.getBoundingClientRect();
+      if (afterImgTag && afterImgTag.style.width !== `${rect.width}px`) {
+        afterImgTag.style.width = `${rect.width}px`;
+        afterImgTag.style.minWidth = `${rect.width}px`;
+      }
       const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
       const percent = (x / rect.width) * 100;
       afterImg.style.width = `${percent}%`;
@@ -317,26 +329,29 @@ export class UIManager {
 
     let isDragging = false;
 
-    slider.addEventListener('mousedown', (e) => {
+    const onStart = (e) => {
       isDragging = true;
-      updateSlider(e.clientX);
-    });
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      updateSlider(clientX);
+    };
 
-    window.addEventListener('mousemove', (e) => {
-      if (isDragging) updateSlider(e.clientX);
-    });
+    const onMove = (e) => {
+      if (!isDragging) return;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      updateSlider(clientX);
+    };
 
-    window.addEventListener('mouseup', () => {
+    const onEnd = () => {
       isDragging = false;
-    });
+    };
 
-    slider.addEventListener('touchstart', (e) => {
-      if (e.touches.length > 0) updateSlider(e.touches[0].clientX);
-    }, { passive: true });
+    slider.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
 
-    slider.addEventListener('touchmove', (e) => {
-      if (e.touches.length > 0) updateSlider(e.touches[0].clientX);
-    }, { passive: true });
+    slider.addEventListener('touchstart', onStart, { passive: true });
+    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchend', onEnd);
   }
 
   /* --- MODAL DE DETALHES DO PRODUTO (ENTRAR NO PRODUTO) --- */
@@ -615,14 +630,6 @@ export class UIManager {
 
   renderProductCardHTML(product, index) {
     const staggerIdx = (index % 8) + 1;
-    const specLines = product.specs 
-      ? Object.entries(product.specs).slice(0, 3).map(([k, v]) => `
-          <div class="xray-spec-line">
-            <span>${k}:</span>
-            <span style="color: var(--color-ice-blue);">${v}</span>
-          </div>
-        `).join('')
-      : '';
 
     const quickSizesHTML = product.sizes.map(sz => `
       <button 
@@ -657,18 +664,6 @@ export class UIManager {
             class="product-img product-img-lifestyle" 
             loading="lazy"
           >
-
-          <!-- Overlay de Raio-X Técnico com Diagrama Transparente -->
-          <div class="xray-overlay">
-            <div class="xray-grid-lines"></div>
-            <div class="xray-header">
-              <span>BLINDAGEM TÉCNICA</span>
-              <span>RAIO-X DE MATERIAIS</span>
-            </div>
-            <div class="xray-specs-body">
-              ${specLines}
-            </div>
-          </div>
 
           <!-- Barra de Seleção Rápida de Tamanho no Hover -->
           <div class="product-quick-add-wrap">
@@ -708,6 +703,265 @@ export class UIManager {
     if (window.frznApp?.scroll) {
       window.frznApp.scroll.refreshReveal();
     }
+  }
+
+  filterCategoryFromFooter(category) {
+    if (window.frznApp?.transitions) {
+      window.frznApp.transitions.navigateTo('shop');
+    }
+    this.activeFilter = category;
+    this.filterBtns.forEach(btn => {
+      if (btn.getAttribute('data-category') === category) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    this.renderProductGrids();
+    const shopView = document.getElementById('view-shop');
+    if (shopView) {
+      shopView.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  openPolicyModal(type) {
+    const backdrop = document.getElementById('policy-modal');
+    const eyebrow = document.getElementById('policy-eyebrow');
+    const title = document.getElementById('policy-title');
+    const body = document.getElementById('policy-body');
+    if (!backdrop || !title || !body) return;
+
+    const policies = {
+      goretex: {
+        eyebrow: 'ESPECIFICAÇÃO DE MATERIAIS FRZN™',
+        title: 'PADRÕES 3L GORE-TEX® PRO',
+        body: `
+          <p>As membranas 3-Layer GORE-TEX® Pro utilizadas no vestuário FRZN são projetadas para os ambientes mais inóspitos do planeta. A estrutura laminada de três camadas une uma membrana ePTFE microporosa de alta densidade diretamente ao tecido externo de nylon Cordura® e a um forro interior ultraleve Micro Grid Backer.</p>
+          <ul>
+            <li><strong>Impermeabilidade Estática:</strong> Resiste a colunas d'água superiores a 28.000 mm.</li>
+            <li><strong>Respirabilidade RET &lt; 6:</strong> Máxima taxa de evaporação de vapor de suor sob atividade física intensa.</li>
+            <li><strong>Vedação de Costuras:</strong> Fitas térmicas de Poliuretano (PU) de 13mm aplicadas a laser em 100% das junções.</li>
+          </ul>
+        `
+      },
+      down: {
+        eyebrow: 'ENGENHARIA DE ISOLAMENTO',
+        title: 'PLUMA ÉTICA 850+ GOOSE DOWN',
+        body: `
+          <p>O preenchimento térmico de nossas parkas utiliza exclusivamente pluma de ganso cinzento europeu certificada pelo padrão internacional RDS (Responsible Down Standard). Cada lote passa por um tratamento nanotécnico hidrofóbico que impede que as plumas absorvam umidade e percam poder de expansão sob neve pesada.</p>
+          <ul>
+            <li><strong>Fill Power Certificado:</strong> 850+ cuin de expansão garantida.</li>
+            <li><strong>Tratamento Hydrophobic:</strong> Mantém 95% do isolamento térmico mesmo após exposição prolongada à névoa.</li>
+            <li><strong>Origem 100% Rastreável:</strong> Livre de práticas de colheita nocivas e com certificação ética auditada.</li>
+          </ul>
+        `
+      },
+      testing: {
+        eyebrow: 'LABORATÓRIOS POLARES',
+        title: 'TESTES EM CLIMAS SUB-ZERO (-45°C)',
+        body: `
+          <p>Antes do lançamento comercial, todos os protótipos FRZN passam por validação em câmaras térmicas pressurizadas no laboratório de Tromsø (Noruega) e testes práticos de expedição na tundra de Svalbard (Latitude 78° Norte).</p>
+          <p>Nossos testes simulam ventos de tempestade de até 90 km/h e variações térmicas drásticas entre o exterior sub-zero e estações subterrâneas aquecidas.</p>
+        `
+      },
+      care: {
+        eyebrow: 'MANUTENÇÃO & CONSERVAÇÃO',
+        title: 'GUIA DE CUIDADOS E REPARO VITALÍCIO',
+        body: `
+          <p>Equipamentos técnicos de alta performance exigem manutenção preventiva para manter a repelência à água (DWR) e a respirabilidade original.</p>
+          <ul>
+            <li><strong>Lavagem:</strong> Lavar à máquina em ciclo delicado a 30°C utilizando detergente neutro para roupas técnicas (sem amaciante).</li>
+            <li><strong>Reativação DWR:</strong> Secar em tambor em temperatura média por 20 minutos para reativar o polímero repelente à água.</li>
+            <li><strong>Serviço de Reparo:</strong> Oferecemos patches vulcanizados originais e substituição de zíperes através de nossa rede de suporte.</li>
+          </ul>
+        `
+      },
+      fidlock: {
+        eyebrow: 'FERRAGENS AEROESPACIAIS',
+        title: 'TRAVAS MAGNÉTICAS FIDLOCK® V-BUCKLE',
+        body: `
+          <p>Substituímos fechos plásticos convencionais por fivelas patenteadas Fidlock® V-Buckle usinadas em alumínio e polímero reforçado com fibra de vidro.</p>
+          <p>O mecanismo auto-guiado combina atração magnética com travamento mecânico positivo. Permite acionamento ultra-rápido mesmo usando luvas polares espessas.</p>
+        `
+      },
+      support: {
+        eyebrow: 'REDE GLOBAL DE SUPORTE',
+        title: 'SUPORTE TÉCNICO GLOBAL FRZN',
+        body: `
+          <p>Nossa equipe de especialistas oferece suporte em tempo real para especificações de produtos, sizing e rastreamento de entregas de expedição.</p>
+          <ul>
+            <li><strong>E-mail de Suporte:</strong> suporte@frzn-arctic.com</li>
+            <li><strong>Pólo Europa (Berlim):</strong> +49 30 8924-0012</li>
+            <li><strong>Pólo Ásia (Tóquio):</strong> +81 3 5410-8924</li>
+          </ul>
+        `
+      },
+      shipping: {
+        eyebrow: 'LOGÍSTICA & ENTREGAS',
+        title: 'ENVIOS EXPRESSOS & DEVOLUÇÃO GRATUITA',
+        body: `
+          <p>Todos os pedidos FRZN são despachados em embalagens herméticas seladas à prova d'água com envio expresso priorizado para todo o Brasil.</p>
+          <ul>
+            <li><strong>Frete Grátis:</strong> Disponível para todos os equipamentos do catálogo.</li>
+            <li><strong>Prazo de Entrega:</strong> 2 a 5 dias úteis para capitais e regiões metropolitanas.</li>
+            <li><strong>Devolução em 30 Dias:</strong> Se o tamanho não for ideal, a primeira troca é inteiramente gratuita com coleta domiciliar.</li>
+          </ul>
+        `
+      },
+      warranty: {
+        eyebrow: 'COMPROMISSO DE QUALIDADE',
+        title: 'GARANTIA VITALÍCIA DOS MATERIAIS',
+        body: `
+          <p>Garantimos a integridade de todas as membranas GORE-TEX, costuras seladas, fivelas Fidlock e zíperes YKK AquaGuard contra defeitos de fabricação durante toda a vida útil do produto.</p>
+          <p>Caso ocorra delaminação ou falha em ferragens originais, o produto será reparado ou substituído sem custo adicional.</p>
+        `
+      },
+      terms: {
+        eyebrow: 'DOCUMENTAÇÃO LEGAL',
+        title: 'TERMOS & PROTOCOLOS ÁRTICOS',
+        body: `
+          <p>Cada peça FRZN acompanha uma plaqueta metálica com número de série gravado a laser para autenticação em nosso registro de proprietários.</p>
+          <p>A compra de edições limitadas e produtos do Drop 02 garante acesso prioritário aos próximos lançamentos do arquivo técnico.</p>
+        `
+      },
+      privacy: {
+        eyebrow: 'PROTEÇÃO DE DADOS',
+        title: 'POLÍTICA DE PRIVACIDADE & ENCRIPTAÇÃO',
+        body: `
+          <p>Seus dados pessoais e de pagamento são protegidos por criptografia de ponta a ponta SSL 256-bit e protocolos rígidos de segurança de e-commerce.</p>
+          <p>Não armazenamos dados bancários e nunca compartilhamos informações cadastrais com terceiros.</p>
+        `
+      }
+    };
+
+    const data = policies[type] || policies['goretex'];
+    eyebrow.textContent = data.eyebrow;
+    title.textContent = data.title;
+    body.innerHTML = data.body;
+
+    backdrop.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  closePolicyModal() {
+    const backdrop = document.getElementById('policy-modal');
+    if (backdrop) {
+      backdrop.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  /* --- FLUXO DE CHECKOUT E PAGAMENTO --- */
+  openCheckoutModal() {
+    const items = store.cart;
+    if (items.length === 0) {
+      this.showToast('Sua sacola ártica está vazia.');
+      return;
+    }
+
+    const backdrop = document.getElementById('checkout-modal');
+    const container = document.getElementById('checkout-summary-items');
+    const subtotalEl = document.getElementById('chk-subtotal-val');
+    const totalEl = document.getElementById('chk-total-val');
+
+    if (container) {
+      container.innerHTML = items.map(item => `
+        <div style="display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: var(--border-subtle);">
+          <img src="${item.img}" style="width: 48px; height: 60px; object-fit: cover; border-radius: 3px;" alt="${item.name}">
+          <div style="flex: 1;">
+            <h5 style="margin: 0; font-family: var(--font-heading); font-size: 0.85rem; color: var(--color-ice-white);">${item.name}</h5>
+            <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-subtle-white);">Tam: ${item.size} | Qtd: ${item.quantity}</span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--color-ice-white);">
+            R$ ${(item.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    const subtotalStr = store.getFormattedSubtotal();
+    if (subtotalEl) subtotalEl.textContent = subtotalStr;
+    if (totalEl) totalEl.textContent = subtotalStr;
+
+    this.goToCheckoutStep(1);
+    this.closeCart();
+
+    if (backdrop) {
+      backdrop.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeCheckoutModal() {
+    const backdrop = document.getElementById('checkout-modal');
+    if (backdrop) {
+      backdrop.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  goToCheckoutStep(stepNumber) {
+    [1, 2, 3].forEach(step => {
+      const panel = document.getElementById(`checkout-step-${step}`);
+      const pill = document.getElementById(`step-pill-${step}`);
+      if (panel) {
+        if (step === stepNumber) {
+          panel.classList.add('active');
+        } else {
+          panel.classList.remove('active');
+        }
+      }
+      if (pill) {
+        if (step === stepNumber) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      }
+    });
+  }
+
+  selectPaymentMethod(method) {
+    const tabs = ['pix', 'card', 'boleto'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`pay-tab-${t}`);
+      const panel = document.getElementById(`pay-panel-${t}`);
+      if (btn) {
+        if (t === method) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+      if (panel) {
+        if (t === method) {
+          panel.classList.add('active');
+        } else {
+          panel.classList.remove('active');
+        }
+      }
+    });
+  }
+
+  copyPixCode() {
+    const input = document.getElementById('pix-code-input');
+    if (input) {
+      input.select();
+      navigator.clipboard?.writeText(input.value);
+      this.showToast('Chave Pix copiada com sucesso!');
+    }
+  }
+
+  confirmOrder(paymentMethod) {
+    const orderCode = `FRZN-${Math.floor(1000 + Math.random() * 9000)}-BR`;
+    const codeEl = document.getElementById('success-order-code');
+    if (codeEl) {
+      codeEl.textContent = `CÓDIGO DE RASTREIO: ${orderCode}`;
+    }
+
+    this.goToCheckoutStep(3);
+    store.clearCart();
+    this.showToast(`Pedido confirmado com sucesso via ${paymentMethod}!`);
   }
 
   showToast(message) {
