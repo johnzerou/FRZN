@@ -232,6 +232,17 @@ export class UIManager {
       });
     });
 
+    // Filtros por Drop (Drop 01 e Drop 02)
+    this.dropTabBtns = document.querySelectorAll('.drop-tab-btn');
+    this.dropTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.dropTabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.activeDrop = btn.getAttribute('data-drop') || 'all';
+        this.renderProductGrids();
+      });
+    });
+
     // Formulário de Newsletter com Validação (FRZN2.pdf Page 3)
     if (this.footerNewsletterForm) {
       this.footerNewsletterForm.addEventListener('submit', (e) => {
@@ -259,6 +270,9 @@ export class UIManager {
       });
     }
 
+    // Inicializa comparador deslizante de fotos (DROP 02)
+    this.initPhotoSlider();
+
     // Tecla ESC para fechar modais
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -267,6 +281,62 @@ export class UIManager {
         this.closeProductModal();
       }
     });
+  }
+
+  filterByDrop(drop) {
+    this.activeDrop = drop;
+    if (this.dropTabBtns) {
+      this.dropTabBtns.forEach(btn => {
+        if (btn.getAttribute('data-drop') === drop) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+    const shopView = document.getElementById('new-collection');
+    if (shopView) {
+      shopView.scrollIntoView({ behavior: 'smooth' });
+    }
+    this.renderProductGrids();
+  }
+
+  initPhotoSlider() {
+    const slider = document.getElementById('drop2-photo-slider');
+    const afterImg = document.getElementById('photo-slider-after');
+    const handle = document.getElementById('photo-slider-handle');
+    if (!slider || !afterImg || !handle) return;
+
+    const updateSlider = (clientX) => {
+      const rect = slider.getBoundingClientRect();
+      const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+      const percent = (x / rect.width) * 100;
+      afterImg.style.width = `${percent}%`;
+      handle.style.left = `${percent}%`;
+    };
+
+    let isDragging = false;
+
+    slider.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      updateSlider(e.clientX);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) updateSlider(e.clientX);
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    slider.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) updateSlider(e.touches[0].clientX);
+    }, { passive: true });
+
+    slider.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) updateSlider(e.touches[0].clientX);
+    }, { passive: true });
   }
 
   /* --- MODAL DE DETALHES DO PRODUTO (ENTRAR NO PRODUTO) --- */
@@ -545,6 +615,15 @@ export class UIManager {
 
   renderProductCardHTML(product, index) {
     const staggerIdx = (index % 8) + 1;
+    const specLines = product.specs 
+      ? Object.entries(product.specs).slice(0, 3).map(([k, v]) => `
+          <div class="xray-spec-line">
+            <span>${k}:</span>
+            <span style="color: var(--color-ice-blue);">${v}</span>
+          </div>
+        `).join('')
+      : '';
+
     return `
       <article 
         class="product-card reveal-item stagger-${staggerIdx}" 
@@ -566,6 +645,19 @@ export class UIManager {
             class="product-img product-img-lifestyle" 
             loading="lazy"
           >
+
+          <!-- Overlay de Raio-X Técnico com Diagrama Transparente -->
+          <div class="xray-overlay">
+            <div class="xray-grid-lines"></div>
+            <div class="xray-header">
+              <span>BLINDAGEM TÉCNICA</span>
+              <span>RAIO-X DE MATERIAIS</span>
+            </div>
+            <div class="xray-specs-body">
+              ${specLines}
+            </div>
+          </div>
+
           <button 
             type="button" 
             class="product-quick-add" 
@@ -581,7 +673,7 @@ export class UIManager {
           </button>
         </div>
         <div class="card-info">
-          <span class="card-category">${product.category} // ${product.badge}</span>
+          <span class="card-category">${product.category} · ${product.badge}</span>
           <h3 class="card-title">${product.name}</h3>
           <div class="card-bottom-row">
             <span class="card-price">${product.formattedPrice}</span>
@@ -593,11 +685,10 @@ export class UIManager {
   }
 
   renderProductGrids() {
-    const filteredProducts = store.filterProducts(this.activeFilter, this.activeSort);
+    const filteredProducts = store.filterProducts(this.activeFilter, this.activeDrop, this.activeSort);
 
     if (this.homeGrid) {
       this.homeGrid.innerHTML = filteredProducts
-        .slice(0, 4)
         .map((p, idx) => this.renderProductCardHTML(p, idx))
         .join('');
     }

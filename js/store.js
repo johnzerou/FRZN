@@ -92,6 +92,7 @@ export const PRODUCTS = [
     id: 'glacial-balaclava',
     name: 'Balaclava Glacial & Goggles',
     category: 'Acessórios',
+    drop: 'drop1',
     price: 1750,
     currency: 'R$',
     formattedPrice: 'R$ 1.750,00',
@@ -107,6 +108,73 @@ export const PRODUCTS = [
       'Ventilação': 'Portas Respiratórias Cortadas a Laser',
       'Isolamento': 'Fleece Corta-Vento Térmico Polar',
       'Ajuste': 'Fita Micrométrica de Fixação Posterior'
+    }
+  },
+  /* --- DROP 02: SVALBARD EXPEDITION --- */
+  {
+    id: 'svalbard-stealth',
+    name: 'FRZN-02 Svalbard Stealth Parka',
+    category: 'Parkas',
+    drop: 'drop2',
+    price: 8450,
+    currency: 'R$',
+    formattedPrice: 'R$ 8.450,00',
+    studioImg: 'assets/images/vortex_studio.jpg',
+    lifestyleImg: 'assets/images/vortex_lifestyle.jpg',
+    detailImg: 'assets/images/vortex_studio.jpg',
+    sizes: ['P', 'M', 'G', 'GG'],
+    badge: 'DROP 02 · EXCLUSIVO SVALBARD',
+    tagline: 'Tecnologia Infravermelha Stealth · Cordura 1000D · GORE-TEX Pro',
+    description: 'Desenvolvida no arquipélago de Svalbard. Escudo de proteção térmica e invisibilidade infravermelha com blindagem metálica de Cordura 1000D e capuz integrado com trava biométrica.',
+    specs: {
+      'Tecido Externo': 'Cordura 1000D Ultra-Resistente',
+      'Blindagem': 'Barreira de Retenção Infravermelha',
+      'Membrana': '3L GORE-TEX Pro 30.000mm',
+      'Isolamento': 'Pluma de Ganso 900+ Fill Power'
+    }
+  },
+  {
+    id: 'polar-fleece',
+    name: 'Sub-Zero Alpine Polar Fleece',
+    category: 'Casacos',
+    drop: 'drop2',
+    price: 2980,
+    currency: 'R$',
+    formattedPrice: 'R$ 2.980,00',
+    studioImg: 'assets/images/subzero_studio.jpg',
+    lifestyleImg: 'assets/images/subzero_lifestyle.jpg',
+    detailImg: 'assets/images/subzero_studio.jpg',
+    sizes: ['PP', 'P', 'M', 'G', 'GG'],
+    badge: 'DROP 02 · CAMADA TÉRMICA',
+    tagline: 'Polartec® Thermal Pro · Painéis Ripstop · Bolsos Selados',
+    description: 'Segunda camada técnica de alto isolamento calor/peso. Confeccionada em Polartec® Thermal Pro com reforços de nylon Ripstop em zonas de fricção e gola de retenção de vento.',
+    specs: {
+      'Tecido Base': 'Polartec® Thermal Pro High-Loft',
+      'Reforços': 'Nylon Ripstop 70D',
+      'Retenção': 'Estrutura Alveolar de Retenção Térmica',
+      'Zíperes': 'YKK® Vislon® Invertidos'
+    }
+  },
+  {
+    id: 'tactical-vest',
+    name: 'Colete Tático Modular Svalbard',
+    category: 'Acessórios',
+    drop: 'drop2',
+    price: 3650,
+    currency: 'R$',
+    formattedPrice: 'R$ 3.650,00',
+    studioImg: 'assets/images/cargo_studio.jpg',
+    lifestyleImg: 'assets/images/cargo_lifestyle.jpg',
+    detailImg: 'assets/images/cargo_studio.jpg',
+    sizes: ['P/M', 'G/GG'],
+    badge: 'DROP 02 · SISTEMA MODULAR',
+    tagline: 'Fivelas Magnéticas Fidlock® · Balaclava Acoplável · Sistema MOLLE',
+    description: 'Colete tático modular acolchoado com balaclava acoplável e bolsas removíveis com fecho magnético Fidlock. Projetado para mobilidade e acesso rápido a equipamentos no ambiente polar.',
+    specs: {
+      'Sistema': 'MOLLE Cortado a Laser',
+      'Ajuste': 'Fivelas Fidlock® V-Buckle 25mm',
+      'Acessório': 'Balaclava Polar Magnética Incluída',
+      'Tecido': 'Softshell DWR Quadridirecional'
     }
   }
 ];
@@ -219,12 +287,18 @@ class StoreManager {
     return PRODUCTS.find(p => p.id === id);
   }
 
-  filterProducts(category = 'all', sort = 'featured') {
+  filterProducts(category = 'all', drop = 'all', sort = 'featured') {
     let filtered = [...PRODUCTS];
 
     if (category && category !== 'all') {
       filtered = filtered.filter(
         p => p.category.toLowerCase() === category.toLowerCase()
+      );
+    }
+
+    if (drop && drop !== 'all') {
+      filtered = filtered.filter(
+        p => (p.drop || 'drop1').toLowerCase() === drop.toLowerCase()
       );
     }
 

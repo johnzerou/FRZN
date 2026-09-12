@@ -338,8 +338,15 @@
     <section class="collection-section" id="new-collection">
       <div class="section-header-row">
         <div class="section-title-wrap">
-          <span class="section-eyebrow">NOVO ARQUIVO // DROP 01</span>
-          <h2 class="section-title">PEÇAS EM DESTAQUE</h2>
+          <span class="section-eyebrow">EQUIPAMENTO TÉCNICO COMPLETO</span>
+          <h2 class="section-title">ARQUIVO DE PRODUTOS</h2>
+          
+          <!-- Filtro por Drop (FRZN Drop 01 & Drop 02) -->
+          <div class="drop-filter-tabs" style="margin-top: 12px;">
+            <button type="button" class="drop-tab-btn active" data-drop="all">TODOS OS DROPS</button>
+            <button type="button" class="drop-tab-btn" data-drop="drop1">DROP 01 — SUB-ZERO</button>
+            <button type="button" class="drop-tab-btn" data-drop="drop2">DROP 02 — SVALBARD</button>
+          </div>
         </div>
 
         <div class="floating-filters-bar">
@@ -359,19 +366,74 @@
       <!-- Barra de Conexão do Catálogo (Otimiza o Espaço e Conecta à Próxima Seção) -->
       <div class="catalog-strip-banner reveal-item">
         <div class="catalog-strip-left">
-          <span class="catalog-strip-pill">SÉRIE 01 // DISPONÍVEL</span>
+          <span class="catalog-strip-pill">SÉRIE 01 & 02 DISPONÍVEIS</span>
           <span class="catalog-strip-text">ARQUIVO COMPLETO DE ALTA ALTITUDE</span>
         </div>
         <div class="catalog-strip-specs">
-          <span>GORE-TEX PRO</span>
-          <span>PLUMA 850+ GANSO</span>
-          <span>28.000MM IMPERMEÁVEL</span>
+          <span>3L GORE-TEX PRO</span>
+          <span>PLUMA 900+ GANSO</span>
+          <span>30.000MM IMPERMEÁVEL</span>
           <span>FIDLOCK MAGNÉTICO</span>
         </div>
         <a href="#shop" class="catalog-strip-btn" data-route="shop" data-cursor-label="CATÁLOGO">
-          <span>VER CATÁLOGO COMPLETO (5 PEÇAS)</span>
+          <span>VER CATÁLOGO COMPLETO (8 PEÇAS)</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
+      </div>
+    </section>
+
+    <!-- 4.5 SHOWCASE DO NOVO DROP 02: SVALBARD EXPEDITION (Com Sobreposição de Fotos 3D & Comparador Slider) -->
+    <section class="drop2-showcase-section" id="drop2-showcase">
+      <div class="drop2-banner-grid">
+        
+        <!-- Coluna Esquerda: Pilha de Fotos em Camadas 3D (Photo Stack Layering) -->
+        <div class="photo-stack-wrapper reveal-item stagger-1" data-cursor-label="SOBREPOSIÇÃO 3D">
+          <div class="photo-stack-layer layer-back" style="background-image: url('assets/images/vortex_lifestyle.jpg');"></div>
+          <div class="photo-stack-layer layer-mid" style="background-image: url('assets/images/cargo_lifestyle.jpg');"></div>
+          <div class="photo-stack-layer layer-front" style="background-image: url('assets/images/vortex_studio.jpg');"></div>
+        </div>
+
+        <!-- Coluna Direita: Detalhes do Lançamento & Comparador de Fotos Deslizante -->
+        <div class="drop2-info-col reveal-item stagger-2">
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+            <span class="pulse-badge" style="width: 8px; height: 8px; background: var(--color-ice-blue); border-radius: 50%;"></span>
+            <span style="font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em; color: var(--color-ice-blue); text-transform: uppercase;">
+              LANÇAMENTO OFICIAL — DROP 02
+            </span>
+          </div>
+
+          <h2 style="font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.05; text-transform: uppercase; margin-bottom: 16px; color: var(--color-absolute-white);">
+            SVALBARD EXPEDITION
+          </h2>
+
+          <p style="font-family: var(--font-body); font-size: 0.95rem; color: var(--color-muted-white); line-height: 1.6; margin-bottom: 24px;">
+            Engenharia de proteção para o paralelo 78° Norte. Peças equipadas com retenção de radiação infravermelha, malha Cordura® 1000D e conectores magnéticos Fidlock® acopláveis.
+          </p>
+
+          <!-- Comparador de Fotos Deslizante Interativo (Estúdio vs. Campo Ártico) -->
+          <div style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-subtle-white); margin-bottom: 8px;">
+              <span>← FOTO EM CAMPO (LIFESTYLE)</span>
+              <span>FOTO ESTÚDIO (BLINDAGEM) →</span>
+            </div>
+
+            <div class="photo-slider-wrap" id="drop2-photo-slider">
+              <img src="assets/images/vortex_studio.jpg" alt="Svalbard Estúdio" class="photo-slider-img">
+              <div class="photo-slider-after" id="photo-slider-after" style="width: 50%;">
+                <img src="assets/images/vortex_lifestyle.jpg" alt="Svalbard Campo">
+              </div>
+              <div class="photo-slider-handle" id="photo-slider-handle">↔</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 16px; align-items: center;">
+            <button type="button" class="cta-pill-btn" onclick="window.frznApp.ui.filterByDrop('drop2')" data-cursor-label="DROP 02">
+              <span>EXPLORAR DROP 02 (3 NOVAS PEÇAS)</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
       </div>
     </section>
 
