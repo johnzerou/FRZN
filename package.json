@@ -1,0 +1,19 @@
+{
+  "name": "frzn-arctic-urbano",
+  "version": "1.0.0",
+  "description": "FRZN™ — E-Commerce de Vestuário Técnico de Inverno e Streetwear de Luxo",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve . -p 8080",
+    "start": "npx -y serve . -p 8080",
+    "serve": "npx -y serve . -p 8080"
+  },
+  "keywords": [
+    "frzn",
+    "arctic-urbano",
+    "streetwear",
+    "e-commerce"
+  ],
+  "author": "FRZN™",
+  "license": "MIT"
+}
