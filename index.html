@@ -105,11 +105,69 @@
     <!-- Menu Mobile Retrátil e Backdrop -->
     <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" aria-hidden="true"></div>
     <div class="mobile-nav-drawer" id="mobile-nav-drawer">
-      <a href="#home" class="nav-link mobile-nav-link active" data-route="home">Início</a>
-      <a href="#collections" class="nav-link mobile-nav-link" data-route="collections">Coleções</a>
-      <a href="#shop" class="nav-link mobile-nav-link" data-route="shop">Catálogo</a>
-      <a href="#about" class="nav-link mobile-nav-link" data-route="about">Manifesto</a>
-      <a href="#contact" class="nav-link mobile-nav-link" data-route="contact">Contato</a>
+      <!-- Cartão de Perfil do Usuário (FRZN ID) -->
+      <div class="mobile-profile-card" onclick="window.frznApp.ui.showToast('FRZN ID: Autenticado // Servidor Tóquio')">
+        <div class="profile-avatar">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div class="profile-details">
+          <span class="profile-status"><span class="status-dot"></span> FRZN ID // CONECTADO</span>
+          <span class="profile-sub">Sessão Criptografada · Tóquio</span>
+        </div>
+      </div>
+
+      <!-- Atalhos de Ação Rápida no Mobile -->
+      <div class="mobile-quick-actions">
+        <button type="button" class="mobile-action-btn" id="btn-mobile-quick-search">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span>Buscar</span>
+        </button>
+        <button type="button" class="mobile-action-btn" id="btn-mobile-quick-cart">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Sacola</span>
+          <span class="cart-badge mobile-badge" style="display: none;">0</span>
+        </button>
+      </div>
+
+      <!-- Links Principais de Navegação -->
+      <nav class="mobile-nav-links">
+        <a href="#home" class="nav-link mobile-nav-link active" data-route="home">
+          <span>Início</span>
+          <span class="nav-route-tag">01</span>
+        </a>
+        <a href="#collections" class="nav-link mobile-nav-link" data-route="collections">
+          <span>Coleções</span>
+          <span class="nav-route-tag">02</span>
+        </a>
+        <a href="#shop" class="nav-link mobile-nav-link" data-route="shop">
+          <span>Catálogo</span>
+          <span class="nav-route-tag">03</span>
+        </a>
+        <a href="#about" class="nav-link mobile-nav-link" data-route="about">
+          <span>Manifesto</span>
+          <span class="nav-route-tag">04</span>
+        </a>
+        <a href="#contact" class="nav-link mobile-nav-link" data-route="contact">
+          <span>Contato</span>
+          <span class="nav-route-tag">05</span>
+        </a>
+      </nav>
+
+      <!-- Rodapé de Telemetria do Drawer -->
+      <div class="mobile-drawer-footer">
+        <span>LAT 64° 08' N // TÓQUIO · BERLIM</span>
+        <span>SISTEMA ÁRTICO v2.4</span>
+      </div>
     </div>
   </header>
 

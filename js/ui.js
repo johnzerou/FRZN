@@ -154,6 +154,22 @@ export class UIManager {
           this.closeMobileMenu();
         });
       });
+
+      const quickSearchBtn = document.getElementById('btn-mobile-quick-search');
+      if (quickSearchBtn) {
+        quickSearchBtn.addEventListener('click', () => {
+          this.closeMobileMenu();
+          this.openSearch();
+        });
+      }
+
+      const quickCartBtn = document.getElementById('btn-mobile-quick-cart');
+      if (quickCartBtn) {
+        quickCartBtn.addEventListener('click', () => {
+          this.closeMobileMenu();
+          this.openCart();
+        });
+      }
     }
 
     // Miniaturas do Hero Arctic 01™ - Crossfade instantâneo

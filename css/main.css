@@ -216,6 +216,25 @@ button {
     display: none; /* In mobile, navigation can be toggled */
   }
 
+  .header-container {
+    padding: 0 16px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .brand-logo-svg {
+    height: 22px;
+  }
+
   .mobile-menu-btn {
     display: flex;
   }
@@ -224,13 +243,13 @@ button {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(15, 22, 32, 0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 22, 32, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     z-index: 998;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s var(--ease-ice-glaze);
+    transition: opacity 0.35s var(--ease-ice-glaze);
   }
 
   .mobile-nav-backdrop.is-open {
@@ -243,41 +262,168 @@ button {
     top: var(--header-height);
     left: 0;
     right: 0;
-    background: rgba(15, 22, 32, 0.96);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: var(--border-active);
-    padding: 20px 24px 28px;
+    max-height: calc(100vh - var(--header-height));
+    overflow-y: auto;
+    background: rgba(15, 22, 32, 0.97);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border-bottom: 1px solid rgba(122, 155, 181, 0.25);
+    padding: 20px 20px 28px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     transform: translateY(-110%);
     transition: transform 0.35s var(--ease-ice-glaze);
     z-index: 999;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
   }
 
   .mobile-nav-drawer.is-open {
     transform: translateY(0);
   }
 
+  /* Cartão de Perfil FRZN ID no Mobile Drawer */
+  .mobile-profile-card {
+    background: var(--color-navy-card);
+    border: 1px solid rgba(122, 155, 181, 0.25);
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .mobile-profile-card:active {
+    border-color: var(--color-ice-blue);
+    background: rgba(122, 155, 181, 0.1);
+  }
+
+  .profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(122, 155, 181, 0.15);
+    border: 1px solid var(--color-ice-blue);
+    color: var(--color-ice-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .profile-status {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--color-ice-white);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #22c55e;
+  }
+
+  .profile-sub {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-subtle-white);
+  }
+
+  /* Atalhos de Ação Rápida (Buscar / Sacola) */
+  .mobile-quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .mobile-action-btn {
+    background: rgba(26, 37, 48, 0.6);
+    border: 1px solid rgba(122, 155, 181, 0.2);
+    border-radius: 4px;
+    padding: 12px;
+    color: var(--color-ice-white);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-action-btn:active {
+    background: var(--color-ice-blue);
+    color: var(--color-deep-navy);
+    border-color: var(--color-ice-blue);
+  }
+
+  /* Navigation Links */
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   .mobile-nav-link {
-    font-size: 1.05rem;
-    padding: 12px 16px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 14px 16px;
     border-radius: 4px;
     background: rgba(26, 37, 48, 0.4);
-    border: 1px solid rgba(122, 155, 181, 0.1);
+    border: 1px solid rgba(122, 155, 181, 0.12);
+    color: var(--color-muted-white);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    text-decoration: none;
     transition: all 0.2s ease;
+  }
+
+  .nav-route-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-ice-blue);
+    letter-spacing: 0.1em;
   }
 
   .mobile-nav-link.active,
   .mobile-nav-link:active {
-    background: rgba(122, 155, 181, 0.15);
+    background: rgba(122, 155, 181, 0.18);
     border-color: var(--color-ice-blue);
-    color: var(--color-ice-white);
+    color: var(--color-absolute-white);
+  }
+
+  .mobile-drawer-footer {
+    border-top: 1px solid rgba(62, 78, 92, 0.4);
+    padding-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--color-subtle-white);
+    letter-spacing: 0.1em;
   }
 }
 
