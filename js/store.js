@@ -167,7 +167,7 @@ export const PRODUCTS = [
     lifestyleImg: 'assets/images/cargo_lifestyle.jpg',
     detailImg: 'assets/images/cargo_studio.jpg',
     sizes: ['P/M', 'G/GG'],
-    badge: 'DROP 02 · SISTEMA MODULAR',
+    badge: 'DROP 02 · MODULAR TÁTICO',
     tagline: 'Fivelas Magnéticas Fidlock® · Balaclava Acoplável · Sistema MOLLE',
     description: 'Colete tático modular acolchoado com balaclava acoplável e bolsas removíveis com fecho magnético Fidlock. Projetado para mobilidade e acesso rápido a equipamentos no ambiente polar.',
     specs: {

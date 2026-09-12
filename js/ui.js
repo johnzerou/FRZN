@@ -105,7 +105,7 @@ export class UIManager {
           this.showToast('Sua sacola ártica está vazia.');
           return;
         }
-        this.showToast('Conectando ao Checkout Criptografado FRZN...');
+        this.showToast('Finalizando seu pedido FRZN...');
         setTimeout(() => {
           this.showToast('Pedido confirmado com sucesso! Rastreamento de envio gerado.');
           store.clearCart();
