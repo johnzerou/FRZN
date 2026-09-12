@@ -608,7 +608,7 @@ export class UIManager {
     if (event) event.stopPropagation();
     const p = store.addToCart(productId, size, 1);
     if (p) {
-      this.showToast(`${p.name} adicionada à sacola`);
+      this.showToast(`${p.name} (Tam. ${size}) adicionada à sacola`);
       this.openCart();
     }
   }
@@ -623,6 +623,18 @@ export class UIManager {
           </div>
         `).join('')
       : '';
+
+    const quickSizesHTML = product.sizes.map(sz => `
+      <button 
+        type="button" 
+        class="quick-size-chip" 
+        onclick="window.frznApp.ui.quickAdd('${product.id}', '${sz}', event)"
+        data-cursor-label="+ TAM ${sz}"
+        title="Adicionar tamanho ${sz} à sacola"
+      >
+        ${sz}
+      </button>
+    `).join('');
 
     return `
       <article 
@@ -658,19 +670,13 @@ export class UIManager {
             </div>
           </div>
 
-          <button 
-            type="button" 
-            class="product-quick-add" 
-            onclick="window.frznApp.ui.quickAdd('${product.id}', 'M', event)"
-            aria-label="Adicionar ${product.name} rapidamente à sacola"
-            data-cursor-label="+ SACOLA"
-          >
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Adicionar Rápido
-          </button>
+          <!-- Barra de Seleção Rápida de Tamanho no Hover -->
+          <div class="product-quick-add-wrap">
+            <span class="quick-add-title">TAMANHO RÁPIDO</span>
+            <div class="quick-sizes-chips">
+              ${quickSizesHTML}
+            </div>
+          </div>
         </div>
         <div class="card-info">
           <span class="card-category">${product.category} · ${product.badge}</span>
