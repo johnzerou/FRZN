@@ -4,4 +4,4 @@ Thumbs.db
 .vscode/
 .idea/
 page_*.png
-
+*.dll
