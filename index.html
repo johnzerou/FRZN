@@ -568,14 +568,25 @@
     <section class="cinematic-expand-section" id="cinematic-expand" aria-label="Expedição Glacial Svalbard">
       <div class="cinematic-expand-container">
         <div class="cinematic-frame" id="cinematic-frame">
-          <img 
-            src="assets/images/glacier_cinematic_full.jpg" 
-            alt="Cordilheira Glacial de Svalbard em Alta Resolução" 
-            class="cinematic-expand-img"
-            id="cinematic-expand-img"
-            loading="lazy"
-            decoding="async"
+          <video 
+            class="cinematic-expand-media"
+            id="cinematic-expand-media"
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            preload="auto"
+            poster="assets/images/glacier_cinematic_full.jpg"
+            aria-label="Vídeo Cinematográfico Expedição Glacial Svalbard"
           >
+            <source src="assets/videos/svalbard_cinematic.mp4" type="video/mp4">
+            <img 
+              src="assets/images/glacier_cinematic_full.jpg" 
+              alt="Cordilheira Glacial de Svalbard em Alta Resolução" 
+              class="cinematic-expand-img"
+              id="cinematic-expand-img"
+            >
+          </video>
           <div class="cinematic-overlay" id="cinematic-overlay" aria-hidden="true"></div>
           
           <div class="cinematic-caption" id="cinematic-caption">

@@ -243,11 +243,11 @@ export class GSAPAnimationEngine {
         /* Seção Cinematográfica: Ken Burns Pinado (scale 1.0 -> 1.15) */
         const cinematicSec = document.getElementById('cinematic-expand');
         const cinematicFrame = document.getElementById('cinematic-frame');
-        const cinematicImg = document.getElementById('cinematic-expand-img');
+        const cinematicMedia = document.getElementById('cinematic-expand-media') || document.getElementById('cinematic-expand-img');
         const cinematicCaption = document.getElementById('cinematic-caption');
         const cinematicOverlay = document.getElementById('cinematic-overlay');
 
-        if (cinematicSec && cinematicFrame && cinematicImg) {
+        if (cinematicSec && cinematicFrame && cinematicMedia) {
           const expandTl = this.gsap.timeline({
             scrollTrigger: {
               trigger: cinematicSec,
@@ -268,7 +268,7 @@ export class GSAPAnimationEngine {
               borderWidth: 0,
               ease: 'none'
             }, 0)
-            .fromTo(cinematicImg,
+            .fromTo(cinematicMedia,
               { scale: 1.0 },
               { scale: 1.15, ease: 'none' }, // Zoom progressivo contínuo Ken Burns
               0
@@ -293,10 +293,10 @@ export class GSAPAnimationEngine {
       mm.add("(max-width: 768px)", () => {
         const cinematicSec = document.getElementById('cinematic-expand');
         const cinematicFrame = document.getElementById('cinematic-frame');
-        const cinematicImg = document.getElementById('cinematic-expand-img');
+        const cinematicMedia = document.getElementById('cinematic-expand-media') || document.getElementById('cinematic-expand-img');
         const cinematicCaption = document.getElementById('cinematic-caption');
 
-        if (cinematicSec && cinematicFrame && cinematicImg) {
+        if (cinematicSec && cinematicFrame && cinematicMedia) {
           const mobileTl = this.gsap.timeline({
             scrollTrigger: {
               trigger: cinematicSec,
@@ -315,7 +315,7 @@ export class GSAPAnimationEngine {
               borderRadius: 0,
               ease: 'none'
             }, 0)
-            .fromTo(cinematicImg,
+            .fromTo(cinematicMedia,
               { scale: 1.0 },
               { scale: 1.1, ease: 'none' },
               0
