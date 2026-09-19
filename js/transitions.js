@@ -42,19 +42,49 @@ export class PageTransitionEngine {
     if (this.isTransitioning || route === this.currentRoute) return;
     this.isTransitioning = true;
 
+    const curtain = document.getElementById('frzn-page-curtain');
+
+    // Transição de página tipo cortina sólida Navy via GSAP Timeline
+    if (window.gsap && curtain) {
+      const tl = window.gsap.timeline({
+        onComplete: () => {
+          this.isTransitioning = false;
+        }
+      });
+
+      tl.set(curtain, { display: 'block', yPercent: 100 })
+        .to(curtain, {
+          yPercent: 0,
+          duration: 0.45,
+          ease: 'power3.inOut'
+        })
+        .call(() => {
+          this.executeRouteSwitch(route);
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          if (pushState) {
+            history.pushState({ route }, '', `#${route}`);
+          }
+        })
+        .to(curtain, {
+          yPercent: -100,
+          duration: 0.45,
+          ease: 'power3.inOut'
+        })
+        .set(curtain, { display: 'none', yPercent: 100 });
+      return;
+    }
+
     if (!this.overlay) {
       this.executeRouteSwitch(route);
       this.isTransitioning = false;
       return;
     }
 
-    // FASE 1: Fade-out / Dissolve da rota atual (0ms a 250ms cubic-bezier(0.25, 1, 0.5, 1))
+    // Fallback CSS Glaze
     this.overlay.className = '';
-    // Força reflow
     void this.overlay.offsetWidth;
     this.overlay.classList.add('glaze-freezing');
 
-    // Ao atingir 250ms, altera a visão DOM e inicia o fade-in / mount
     setTimeout(() => {
       this.executeRouteSwitch(route);
       window.scrollTo({ top: 0, behavior: 'instant' });
@@ -63,7 +93,6 @@ export class PageTransitionEngine {
         history.pushState({ route }, '', `#${route}`);
       }
 
-      // FASE 2: Fade-in / Mount da nova rota (250ms a 550ms = 300ms de duração)
       this.overlay.classList.remove('glaze-freezing');
       this.overlay.classList.add('glaze-thawing');
 

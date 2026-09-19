@@ -4,7 +4,7 @@
    =================================================================== */
 
 export const PRODUCTS = [
-  /* --- CATEGORIA 1: CASACOS (3 ITENS) --- */
+  /* --- CATEGORIA 1: CASACOS (4 ITENS) --- */
   {
     id: 'arctic-01',
     name: 'FRZN-01 Arctic Down Parka',
@@ -71,8 +71,30 @@ export const PRODUCTS = [
       'Capuz': 'Ergonômico Compatível com Capacete'
     }
   },
+  {
+    id: 'storm-hybrid',
+    name: 'Jaqueta Híbrida Storm Alpha 3L',
+    category: 'Casacos',
+    drop: 'drop1',
+    price: 5290,
+    currency: 'R$',
+    formattedPrice: 'R$ 5.290,00',
+    studioImg: 'assets/images/storm_hybrid_studio.jpg',
+    lifestyleImg: 'assets/images/storm_hybrid_studio.jpg',
+    detailImg: 'assets/images/storm_hybrid_studio.jpg',
+    sizes: ['P', 'M', 'G', 'GG'],
+    badge: 'EDITION OBSIDIAN · ALPHA',
+    tagline: 'Polartec Alpha 3L · Costuras Ice-Blue · Fivelas Magnéticas',
+    description: 'Casaco híbrido de alta resistência estrutural com fivelas torácicas magnéticas duplas e termorregulação ativa Polartec Alpha para transição climática extrema.',
+    specs: {
+      'Membrana': 'Polartec Alpha Direct + 3L Shell',
+      'Costuras': 'Selagem Termosoldada Ice-Blue',
+      'Ferragens': 'Fechos Magnéticos de Liberação Rápida',
+      'Respirabilidade': '24.000g/m²/24h'
+    }
+  },
 
-  /* --- CATEGORIA 2: PARKAS (3 ITENS) --- */
+  /* --- CATEGORIA 2: PARKAS (4 ITENS) --- */
   {
     id: 'vortex-parka',
     name: 'Parka Técnica Vortex Down',
@@ -139,8 +161,30 @@ export const PRODUCTS = [
       'Impermeabilidade': 'Tratamento Teflon EcoElite™ DWR'
     }
   },
+  {
+    id: 'aurora-parka',
+    name: 'Parka Ártica Aurora Pro 950+',
+    category: 'Parkas',
+    drop: 'drop2',
+    price: 8450,
+    currency: 'R$',
+    formattedPrice: 'R$ 8.450,00',
+    studioImg: 'assets/images/aurora_parka_studio.jpg',
+    lifestyleImg: 'assets/images/aurora_parka_studio.jpg',
+    detailImg: 'assets/images/aurora_parka_studio.jpg',
+    sizes: ['PP', 'P', 'M', 'G', 'GG'],
+    badge: 'DROP 02 · EXPEDIÇÃO AURORA',
+    tagline: 'Deep Midnight Navy · Pluma 950+ Goose Down · Forro Térmico Mylar',
+    description: 'Desenvolvida para o frio ártico profundo da Noruega setentrional. Forro metalizado com reflexão de calor infravermelho e carcela de tempestade magnética hermética.',
+    specs: {
+      'Isolamento': 'Pluma de Ganso Húngaro 950+ Fill Power',
+      'Retenção': 'Barreira Radiante Mylar Interior',
+      'Fechamento': 'Zíper Bidirecional com Carcela Magnética',
+      'Proteção Térmica': 'Certificada até -48°C'
+    }
+  },
 
-  /* --- CATEGORIA 3: CALÇAS (3 ITENS) --- */
+  /* --- CATEGORIA 3: CALÇAS (4 ITENS) --- */
   {
     id: 'cryo-cargo',
     name: 'Calça Tática Modular Cryo',
@@ -207,8 +251,30 @@ export const PRODUCTS = [
       'Elasticidade': 'Softshell Flex 3D'
     }
   },
+  {
+    id: 'alpine-bib',
+    name: 'Salopete Técnica Alpina Apex',
+    category: 'Calças',
+    drop: 'drop1',
+    price: 4250,
+    currency: 'R$',
+    formattedPrice: 'R$ 4.250,00',
+    studioImg: 'assets/images/alpine_bib_studio.jpg',
+    lifestyleImg: 'assets/images/alpine_bib_studio.jpg',
+    detailImg: 'assets/images/alpine_bib_studio.jpg',
+    sizes: ['38', '40', '42', '44', '46'],
+    badge: 'ALTA MONTANHA · SALOPETE',
+    tagline: 'Arnês Ergonômico · Reforço Cordura · Zíperes Verticais',
+    description: 'Salopete alpina impermeável de cintura alta com suspensórios magnéticos ajustáveis. Projetada para resistir à abrasão contra rochas e neve em ventos fortes.',
+    specs: {
+      'Construção': 'Hardshell 3L Trino com Reforço Cordura',
+      'Suspensórios': 'Tiras Ajustáveis com Fecho Fidlock',
+      'Zíperes': 'YKK AquaGuard de Abertura Total Lateral',
+      'Impermeabilidade': '28.000mm Coluna de Água'
+    }
+  },
 
-  /* --- CATEGORIA 4: ACESSÓRIOS (3 ITENS) --- */
+  /* --- CATEGORIA 4: ACESSÓRIOS (4 ITENS) --- */
   {
     id: 'glacial-balaclava',
     name: 'Balaclava Glacial & Goggles',
@@ -273,6 +339,28 @@ export const PRODUCTS = [
       'Impermeabilidade': 'Certificação IPX7 Estanque',
       'Material': 'Lona TPU Cordura 840D',
       'Compartimento': 'Case Térmico para Laptop de 16"'
+    }
+  },
+  {
+    id: 'ice-goggles',
+    name: 'Óculos Glacial Storm Pro Goggles',
+    category: 'Acessórios',
+    drop: 'drop2',
+    price: 2190,
+    currency: 'R$',
+    formattedPrice: 'R$ 2.190,00',
+    studioImg: 'assets/images/goggles_pro_studio.jpg',
+    lifestyleImg: 'assets/images/goggles_pro_studio.jpg',
+    detailImg: 'assets/images/goggles_pro_studio.jpg',
+    sizes: ['TAMANHO ÚNICO'],
+    badge: 'DROP 02 · ÓPTICA GLACIAL',
+    tagline: 'Lente Cilíndrica Magnética · Tratamento Polarizado VLT 12% · Tira Jacquard',
+    description: 'Óculos técnicos de nevasca com troca magnética instantânea de lente, tratamento antiembaçante permanente e tira jacquard técnica com acabamento de silicone antiderrapante.',
+    specs: {
+      'Lente': 'Cilíndrica Dupla Ice-Blue Polarizada UV400',
+      'Troca Rápida': '8 Ímãs de Neodímio Integrados',
+      'Ventilação': 'Canais de Fluxo de Ar Antiembaçante',
+      'Compatibilidade': 'Ajuste Universal para Capacetes e Balaclavas'
     }
   }
 ];

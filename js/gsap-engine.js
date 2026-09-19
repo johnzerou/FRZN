@@ -1,13 +1,15 @@
 /* ===================================================================
-   FRZN - GSAP + SCROLLTRIGGER + LENIS ANIMATION ENGINE
+   FRZN - GSAP + SCROLLTRIGGER + DRAGGABLE + LENIS ANIMATION ENGINE
    Editorial Premium Micro-Interactions, 3-Layer Scrub Parallax,
-   Pinned Horizontal Scroll, Magnetic Buttons & Stat Count-Up
+   Pinned Ken Burns (Svalbard), Infinite Marquee, Preloader Curtain,
+   Reactive Navbar, Draggable Inertia Gallery & Technical Badges Glow
    =================================================================== */
 
 export class GSAPAnimationEngine {
   constructor() {
     this.gsap = window.gsap;
     this.ScrollTrigger = window.ScrollTrigger;
+    this.Draggable = window.Draggable;
     this.Lenis = window.Lenis;
     this.ctx = null;
     this.lenis = null;
@@ -17,7 +19,12 @@ export class GSAPAnimationEngine {
       return;
     }
 
-    this.gsap.registerPlugin(this.ScrollTrigger);
+    if (this.Draggable) {
+      this.gsap.registerPlugin(this.ScrollTrigger, this.Draggable);
+    } else {
+      this.gsap.registerPlugin(this.ScrollTrigger);
+    }
+
     this.initLenis();
     this.initAnimations();
   }
@@ -49,19 +56,28 @@ export class GSAPAnimationEngine {
     }
   }
 
-  /* Animações completas escopadas via gsap.context() */
+  /* Animações completas escopadas via gsap.context() para perfeita gestão de memória */
   initAnimations() {
     if (this.ctx) this.ctx.revert();
 
     this.ctx = this.gsap.context(() => {
+      // 1. Preloader com Logo Mask & Curtain Wipe
+      this.initPreloader();
+
+      // 2. Navbar Reativa com ScrollTrigger.toggleClass
+      this.initReactiveNavbar();
+
+      // 3. Marquee Infinito com Pausa em Hover
+      this.initMarquee();
+
       const mm = this.gsap.matchMedia();
 
       /* -------------------------------------------------------------
-         DESKTOP & TABLET ANIMATIONS
+         DESKTOP & TABLET ANIMATIONS (min-width: 769px)
          ------------------------------------------------------------- */
       mm.add("(min-width: 769px)", () => {
         
-        /* 2. Hero (Seção Home) — Parallax Scrub 3 Camadas & Opacidade */
+        /* Hero (Seção Home) — Parallax Scrub 3 Camadas & Opacidade */
         const heroSection = document.getElementById('hero-entry');
         if (heroSection) {
           const heroTl = this.gsap.timeline({
@@ -73,45 +89,19 @@ export class GSAPAnimationEngine {
             }
           });
 
-          // Fundo montanha (camada 1 - lenta)
           const heroBg = document.querySelector('.hero-parallax-bg');
-          if (heroBg) {
-            heroTl.to(heroBg, { yPercent: 20, ease: 'none' }, 0);
-          }
+          if (heroBg) heroTl.to(heroBg, { yPercent: 20, ease: 'none' }, 0);
 
-          // Texto foreground (camada 2 - média)
           const heroFg = document.querySelector('.hero-foreground');
-          if (heroFg) {
-            heroTl.to(heroFg, { yPercent: 35, opacity: 0.1, ease: 'none' }, 0);
-          }
+          if (heroFg) heroTl.to(heroFg, { yPercent: 35, opacity: 0.1, ease: 'none' }, 0);
 
-          // Stencils gráficos (camada 3 - lateral)
           const stencilLeft = document.querySelector('.stencil-left');
           const stencilRight = document.querySelector('.stencil-right');
           if (stencilLeft) heroTl.to(stencilLeft, { x: -60, y: 50, ease: 'none' }, 0);
           if (stencilRight) heroTl.to(stencilRight, { x: 60, y: -40, ease: 'none' }, 0);
 
-          // Overlay escuro com opacidade animada de 20% a 75%
           const heroOverlay = document.querySelector('.hero-gradient-overlay');
-          if (heroOverlay) {
-            heroTl.to(heroOverlay, { opacity: 0.75, ease: 'none' }, 0);
-          }
-        }
-
-        /* Hero Title Line Reveal (Split Text Stagger) */
-        const heroTitle = document.querySelector('.hero-title');
-        const heroSubtitle = document.querySelector('.hero-subtitle');
-        if (heroTitle) {
-          this.gsap.fromTo(heroTitle, 
-            { opacity: 0, y: 35 },
-            { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.2 }
-          );
-        }
-        if (heroSubtitle) {
-          this.gsap.fromTo(heroSubtitle,
-            { opacity: 0, y: 25 },
-            { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out', delay: 0.4 }
-          );
+          if (heroOverlay) heroTl.to(heroOverlay, { opacity: 0.75, ease: 'none' }, 0);
         }
 
         /* Botão "Explorar Coleção" com Efeito Magnético sutil (gsap.quickTo) */
@@ -134,7 +124,7 @@ export class GSAPAnimationEngine {
           });
         });
 
-        /* 3. Peça Destaque (Puffer Arctic 01) — Scale Fade + Mouse 3D Tilt */
+        /* Peça Destaque (Puffer Arctic 01) — Scale Fade */
         const productHeroStage = document.querySelector('.main-stage-wrapper');
         if (productHeroStage) {
           this.gsap.fromTo(productHeroStage,
@@ -172,7 +162,7 @@ export class GSAPAnimationEngine {
           );
         }
 
-        /* 5. Seção Filosofia / Manifesto Parallax & Count-Up Estatístico */
+        /* Seção Filosofia / Manifesto Parallax & Count-Up Estatístico */
         const manifestoSec = document.querySelector('.manifesto-section');
         if (manifestoSec) {
           this.gsap.to(manifestoSec, {
@@ -193,7 +183,6 @@ export class GSAPAnimationEngine {
           const stat1 = statItems[0].querySelector('.stat-num');
           const stat2 = statItems[1].querySelector('.stat-num');
           const stat3 = statItems[2].querySelector('.stat-num');
-
           const counterObj = { val1: 0, val2: 0, val3: 0 };
 
           this.ScrollTrigger.create({
@@ -216,7 +205,7 @@ export class GSAPAnimationEngine {
           });
         }
 
-        /* 6. Seção Coleções (Scroll Horizontal Pinado) */
+        /* Seção Coleções (Scroll Horizontal Pinado + Draggable com Inércia) */
         const horizSection = document.getElementById('horizontal-collections');
         const horizTrack = document.getElementById('horizontal-track-container');
         const horizInner = document.querySelector('.horizontal-track');
@@ -236,21 +225,34 @@ export class GSAPAnimationEngine {
               invalidateOnRefresh: true
             }
           });
+
+          // Física de inércia via Draggable
+          if (this.Draggable) {
+            this.Draggable.create(horizInner, {
+              type: 'x',
+              bounds: horizTrack,
+              edgeResistance: 0.8,
+              inertia: true,
+              cursor: 'grab',
+              activeCursor: 'grabbing',
+              dragClickables: false
+            });
+          }
         }
 
-        /* 6.5. Seção Cinematográfica Full-Screen Scroll Expand (Expedição Svalbard) */
+        /* Seção Cinematográfica: Ken Burns Pinado (scale 1.0 -> 1.15) */
         const cinematicSec = document.getElementById('cinematic-expand');
         const cinematicFrame = document.getElementById('cinematic-frame');
         const cinematicImg = document.getElementById('cinematic-expand-img');
         const cinematicCaption = document.getElementById('cinematic-caption');
         const cinematicOverlay = document.getElementById('cinematic-overlay');
 
-        if (cinematicSec && cinematicFrame) {
+        if (cinematicSec && cinematicFrame && cinematicImg) {
           const expandTl = this.gsap.timeline({
             scrollTrigger: {
               trigger: cinematicSec,
               start: 'top top',
-              end: '+=140%',
+              end: '+=150%',
               pin: true,
               scrub: 0.8,
               anticipatePin: 1
@@ -266,10 +268,11 @@ export class GSAPAnimationEngine {
               borderWidth: 0,
               ease: 'none'
             }, 0)
-            .to(cinematicImg, {
-              scale: 1.0,
-              ease: 'none'
-            }, 0)
+            .fromTo(cinematicImg,
+              { scale: 1.0 },
+              { scale: 1.15, ease: 'none' }, // Zoom progressivo contínuo Ken Burns
+              0
+            )
             .to(cinematicOverlay, {
               opacity: 0.65,
               ease: 'none'
@@ -284,14 +287,16 @@ export class GSAPAnimationEngine {
 
       });
 
-      /* Suporte Mobile para a Expansão Cinematográfica */
+      /* -------------------------------------------------------------
+         RESPONSIVIDADE MOBILE (max-width: 768px)
+         ------------------------------------------------------------- */
       mm.add("(max-width: 768px)", () => {
         const cinematicSec = document.getElementById('cinematic-expand');
         const cinematicFrame = document.getElementById('cinematic-frame');
         const cinematicImg = document.getElementById('cinematic-expand-img');
         const cinematicCaption = document.getElementById('cinematic-caption');
 
-        if (cinematicSec && cinematicFrame) {
+        if (cinematicSec && cinematicFrame && cinematicImg) {
           const mobileTl = this.gsap.timeline({
             scrollTrigger: {
               trigger: cinematicSec,
@@ -310,10 +315,11 @@ export class GSAPAnimationEngine {
               borderRadius: 0,
               ease: 'none'
             }, 0)
-            .to(cinematicImg, {
-              scale: 1.0,
-              ease: 'none'
-            }, 0)
+            .fromTo(cinematicImg,
+              { scale: 1.0 },
+              { scale: 1.1, ease: 'none' },
+              0
+            )
             .to(cinematicCaption, {
               opacity: 1,
               y: 0,
@@ -324,8 +330,26 @@ export class GSAPAnimationEngine {
       });
 
       /* -------------------------------------------------------------
-         4. GRID DE PRODUTOS BATCH REVEAL & GSAP HOVER (ALL SCREENS)
+         REVEAL COM CLIP-PATH & BATCH REVEAL (TODAS AS TELAS)
          ------------------------------------------------------------- */
+      const clipElements = document.querySelectorAll('.product-media-wrapper, .photo-stack-wrapper, .campaign-card-bg');
+      clipElements.forEach(el => {
+        this.gsap.fromTo(el,
+          { clipPath: 'polygon(0% 12%, 100% 12%, 100% 88%, 0% 88%)', opacity: 0.8 },
+          {
+            clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+            opacity: 1,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 90%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+      });
+
       this.ScrollTrigger.batch('.product-card', {
         interval: 0.1,
         batchMax: 6,
@@ -362,7 +386,26 @@ export class GSAPAnimationEngine {
         }
       });
 
-      /* 7. Transições Suaves de Entrada por Seção */
+      /* Badges Técnicos com Micro-interações de Glow / Pulse no Hover */
+      const techBadges = document.querySelectorAll('.card-category, .pulse-badge, .spec-item, .cinematic-badge, .subpage-tag, .section-eyebrow');
+      techBadges.forEach(badge => {
+        badge.addEventListener('mouseenter', () => {
+          this.gsap.to(badge, {
+            scale: 1.04,
+            duration: 0.25,
+            ease: 'power2.out'
+          });
+        });
+        badge.addEventListener('mouseleave', () => {
+          this.gsap.to(badge, {
+            scale: 1.0,
+            duration: 0.25,
+            ease: 'power2.out'
+          });
+        });
+      });
+
+      /* Transições Suaves de Entrada por Seção */
       const sections = document.querySelectorAll('.info-card, .drop2-showcase-section, .subpage-header');
       sections.forEach(sec => {
         this.gsap.fromTo(sec,
@@ -384,6 +427,85 @@ export class GSAPAnimationEngine {
     });
   }
 
+  /* Preloader com Reveal do Logo via Clip-path, Barra de Progresso e Curtain Wipe */
+  initPreloader() {
+    const preloader = document.getElementById('frzn-preloader');
+    const curtain = document.getElementById('preloader-curtain');
+    const logoSvg = document.getElementById('preloader-logo-svg');
+    const counter = document.getElementById('preloader-counter');
+    const barFill = document.getElementById('preloader-bar-fill');
+
+    if (!preloader || !curtain) return;
+
+    const pTl = this.gsap.timeline({
+      onComplete: () => {
+        preloader.style.display = 'none';
+        const heroTitle = document.querySelector('.hero-title');
+        const heroSubtitle = document.querySelector('.hero-subtitle');
+        if (heroTitle && heroSubtitle) {
+          this.gsap.fromTo([heroTitle, heroSubtitle],
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out' }
+          );
+        }
+      }
+    });
+
+    const progressObj = { val: 0 };
+
+    pTl
+      .fromTo(logoSvg,
+        { clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)', opacity: 0 },
+        { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', opacity: 1, duration: 0.85, ease: 'power3.out' }
+      )
+      .to(progressObj, {
+        val: 100,
+        duration: 1.1,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          const rounded = Math.round(progressObj.val);
+          if (counter) counter.textContent = `${rounded}%`;
+          if (barFill) barFill.style.width = `${rounded}%`;
+        }
+      }, '-=0.3')
+      .to({}, { duration: 0.12 })
+      .to(curtain, {
+        yPercent: -100,
+        duration: 0.75,
+        ease: 'power4.inOut'
+      });
+  }
+
+  /* Navbar reativa: ScrollTrigger.toggleClass para encolher altura e escurecer fundo */
+  initReactiveNavbar() {
+    const header = document.getElementById('site-header');
+    if (header) {
+      this.ScrollTrigger.create({
+        trigger: 'body',
+        start: '60px top',
+        end: 'max',
+        toggleClass: { targets: header, className: 'scrolled' }
+      });
+    }
+  }
+
+  /* Marquee Infinito com Pausa no Hover */
+  initMarquee() {
+    const marqueeTrack = document.getElementById('marquee-track');
+    const marqueeWrap = document.getElementById('frzn-marquee-strip');
+    if (marqueeTrack && marqueeWrap) {
+      const marqueeTween = this.gsap.to(marqueeTrack, {
+        xPercent: -50,
+        repeat: -1,
+        duration: 24,
+        ease: 'none'
+      });
+
+      marqueeWrap.addEventListener('mouseenter', () => marqueeTween.pause());
+      marqueeWrap.addEventListener('mouseleave', () => marqueeTween.play());
+    }
+  }
+
   /* Recarrega os gatilhos e escopo nas trocas de rotas SPA */
   refresh() {
     if (this.ScrollTrigger) {
@@ -393,7 +515,7 @@ export class GSAPAnimationEngine {
     }
   }
 
-  /* Limpeza de memória */
+  /* Limpeza rigorosa de memória no desmonte */
   destroy() {
     if (this.ctx) this.ctx.revert();
     if (this.lenis) this.lenis.destroy();

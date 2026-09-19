@@ -2698,3 +2698,195 @@ html.lenis, html.lenis body {
     border-radius: 8px;
   }
 }
+
+/* ===================================================================
+   NOVA CAMADA VISUAL: PRELOADER, CORTINA GSAP, MARQUEE & BADGES GLOW
+   =================================================================== */
+
+/* Preloader Cinematográfico Fullscreen */
+#frzn-preloader {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.preloader-curtain {
+  width: 100%;
+  height: 100%;
+  background: #0A0F16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  will-change: transform;
+}
+
+.preloader-center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.preloader-logo-mask {
+  width: 170px;
+  height: 38px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader-logo-svg {
+  width: 170px;
+  height: 38px;
+  display: block;
+}
+
+.preloader-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 220px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-ice-blue);
+  letter-spacing: 0.12em;
+}
+
+.preloader-bar-track {
+  width: 220px;
+  height: 2px;
+  background: rgba(122, 155, 181, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.preloader-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--color-ice-blue);
+  box-shadow: 0 0 10px rgba(122, 155, 181, 0.85);
+  transition: width 0.05s linear;
+}
+
+/* Cortina Sólida Navy para Transição SPA */
+#frzn-page-curtain {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99998;
+  display: none;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.curtain-blade {
+  width: 100%;
+  height: 100%;
+  background: #0F1620;
+}
+
+.curtain-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-ice-blue);
+  box-shadow: 0 0 15px var(--color-ice-blue);
+}
+
+/* Marquee Infinito Tipográfico */
+.frzn-marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: #090D13;
+  border-top: 1px solid rgba(122, 155, 181, 0.2);
+  border-bottom: 1px solid rgba(122, 155, 181, 0.2);
+  padding: 16px 0;
+  user-select: none;
+  position: relative;
+  z-index: 10;
+}
+
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.marquee-item {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-ice-white);
+  text-transform: uppercase;
+  padding: 0 20px;
+}
+
+.marquee-separator {
+  color: var(--color-ice-blue);
+  font-size: 0.75rem;
+  opacity: 0.85;
+  text-shadow: 0 0 8px rgba(122, 155, 181, 0.8);
+}
+
+.frzn-marquee-wrap:hover .marquee-item {
+  color: var(--color-ice-blue);
+}
+
+/* Header Scrolled Toggle */
+.site-header.scrolled {
+  background-color: rgba(10, 15, 22, 0.96) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(122, 155, 181, 0.25) !important;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6) !important;
+  height: 60px !important;
+}
+
+.site-header.scrolled .brand-logo-svg {
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+/* Micro-interação de Glow/Pulse nos Badges Técnicos */
+.pulse-badge,
+.card-category,
+.spec-item,
+.cinematic-badge,
+.quick-size-chip {
+  transition: all 0.25s var(--ease-ice-glaze);
+}
+
+.card-category:hover,
+.cinematic-badge:hover,
+.spec-item:hover,
+.quick-size-chip:hover {
+  border-color: var(--color-ice-blue) !important;
+  box-shadow: 0 0 14px rgba(122, 155, 181, 0.5) !important;
+  color: var(--color-absolute-white) !important;
+}
+
+/* Comprovante Técnico de Checkout */
+.confirmed-order-receipt {
+  margin: 16px 0;
+  animation: fadeIn 0.4s ease;
+}
+
+.receipt-box {
+  background: rgba(122, 155, 181, 0.08);
+  border: 1px solid rgba(122, 155, 181, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+

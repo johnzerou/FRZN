@@ -14,9 +14,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- GSAP, ScrollTrigger & Lenis Smooth Scroll -->
+  <!-- GSAP, ScrollTrigger, Draggable & Lenis Smooth Scroll -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Draggable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.9/dist/lenis.min.js"></script>
 
   <!-- CSS Design System & Módulos -->
@@ -47,6 +48,38 @@
       </svg>
       <span>FRZN™ TRANSIÇÃO DE COLEÇÃO</span>
     </div>
+  </div>
+
+  <!-- ===============================================================
+       PRELOADER CINEMATOGRÁFICO GSAP COM CLIP-PATH & CURTAIN WIPE
+       =============================================================== -->
+  <div id="frzn-preloader" aria-hidden="true">
+    <div class="preloader-curtain" id="preloader-curtain">
+      <div class="preloader-center-content">
+        <div class="preloader-logo-mask" id="preloader-logo-mask">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 38" fill="none" class="preloader-logo-svg" id="preloader-logo-svg">
+            <path d="M0 0H26.5V6.8H7.6V15.6H23.5V22.2H7.6V38H0V0Z" fill="#FFFFFF"/>
+            <path d="M34 0H56.5C65.5 0 71.5 4.5 71.5 12.2C71.5 17.6 68 21.3 62 22.8L73.5 38H63L52.8 23.8H41.6V38H34V0ZM41.6 6.8V17H55C59.8 17 63.5 15.2 63.5 12.2C63.5 9 59.8 6.8 55 6.8H41.6Z" fill="#FFFFFF"/>
+            <path d="M78 0H112V6.8L89.5 31.2H113V38H78V31.2L100.5 6.8H78V0Z" fill="#FFFFFF"/>
+            <path d="M120 0H128.5L146.5 25.5V0H154V38H145.5L127.5 12.5V38H120V0Z" fill="#FFFFFF"/>
+            <text x="157" y="11" font-family="'JetBrains Mono', 'Space Grotesk', monospace" font-size="9" font-weight="800" fill="#7A9BB5">TM</text>
+          </svg>
+        </div>
+        <div class="preloader-meta">
+          <span class="preloader-status">ARCTIC SYSTEM BOOT // 78° N</span>
+          <span class="preloader-counter" id="preloader-counter">0%</span>
+        </div>
+        <div class="preloader-bar-track">
+          <div class="preloader-bar-fill" id="preloader-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cortina Sólida Navy para Transições de Página SPA GSAP -->
+  <div id="frzn-page-curtain" aria-hidden="true">
+    <div class="curtain-blade"></div>
+    <div class="curtain-line"></div>
   </div>
 
   <!-- Header Fixo Sticky -->
@@ -338,6 +371,36 @@
 
       </div>
     </section>
+
+    <!-- 2.5 MARQUEE INFINITO TIPOGRÁFICO DE LUXO TÉCNICO -->
+    <div class="frzn-marquee-wrap" id="frzn-marquee-strip" aria-label="Tecnologia & Desempenho Ártico">
+      <div class="marquee-track" id="marquee-track">
+        <span class="marquee-item">FRZN™ SUB-ZERO EXPEDITION</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">3L GORE-TEX PRO 28.000MM</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">FIDLOCK® MAGNETIC V-BUCKLE</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">TESTADO A -45°C EM SVALBARD 78° N</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">PLUMA ÉTICA 950+ GOOSE DOWN</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">STREETWEAR TÉCNICO DE ALTO DESEMPENHO</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">FRZN™ SUB-ZERO EXPEDITION</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">3L GORE-TEX PRO 28.000MM</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">FIDLOCK® MAGNETIC V-BUCKLE</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">TESTADO A -45°C EM SVALBARD 78° N</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">PLUMA ÉTICA 950+ GOOSE DOWN</span>
+        <span class="marquee-separator">✦</span>
+        <span class="marquee-item">STREETWEAR TÉCNICO DE ALTO DESEMPENHO</span>
+        <span class="marquee-separator">✦</span>
+      </div>
+    </div>
 
     <!-- 3. Grid de Produtos Principal ("New Collection") -->
     <section class="collection-section" id="new-collection">
@@ -662,7 +725,7 @@
       <!-- Coluna da Galeria -->
       <div class="modal-gallery-col">
         <div class="modal-main-image-wrap">
-          <img id="modal-main-img" src="" alt="Imagem Principal" class="modal-main-img">
+          <img id="modal-main-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='750' viewBox='0 0 600 750'%3E%3Crect width='600' height='750' fill='%230F1620'/%3E%3C/svg%3E" alt="Visualização do Produto" class="modal-main-img" style="opacity: 0; transition: opacity 0.25s ease;">
         </div>
         <div class="modal-thumbs-row" id="modal-thumbs-row">
           <!-- Miniaturas injetadas dinamicamente -->
@@ -681,13 +744,13 @@
           <!-- Especificações injetadas dinamicamente -->
         </div>
 
-        <!-- Seletor de Tamanhos -->
-        <div class="size-selector-wrap">
+        <!-- Seletor de Tamanhos com Renderização Condicional Rígida -->
+        <div class="size-selector-wrap" id="modal-size-selector-wrap" style="display: none;">
           <div class="size-header">
             <span>SELECIONAR TAMANHO:</span>
           </div>
           <div class="size-options" id="modal-sizes-row">
-            <!-- Botões de tamanho injetados dinamicamente -->
+            <!-- Botões de tamanho injetados dinamicamente via JS -->
           </div>
         </div>
 
@@ -1070,6 +1133,9 @@
                 <div class="timeline-step"><span>📦</span> Em Trânsito</div>
                 <div class="timeline-step"><span>🏠</span> Entregue</div>
               </div>
+
+              <!-- Resumo Explícito com Total Real Pago e Comprovante Técnico -->
+              <div class="confirmed-order-receipt" id="confirmed-order-receipt"></div>
 
               <button type="button" class="cta-pill-btn" onclick="window.frznApp.ui.closeCheckoutModal()" style="margin-top: 24px;">
                 <span>VOLTAR À LOJA</span>

@@ -41,6 +41,7 @@ export class UIManager {
     this.modalDesc = document.getElementById('modal-desc');
     this.modalSpecsList = document.getElementById('modal-specs-list');
     this.modalSizesRow = document.getElementById('modal-sizes-row');
+    this.modalSizeSelectorWrap = document.getElementById('modal-size-selector-wrap');
     this.modalAddBtn = document.getElementById('btn-modal-add');
 
     // Busca
@@ -69,6 +70,9 @@ export class UIManager {
     // Newsletter forms
     this.footerNewsletterForm = document.getElementById('footer-newsletter-form');
     this.footerNewsletterInput = document.getElementById('footer-newsletter-email');
+
+    // Inicialização das máscaras reativas de checkout
+    this.initCheckoutMasks();
   }
 
   bindEvents() {
@@ -354,26 +358,37 @@ export class UIManager {
     window.addEventListener('touchend', onEnd);
   }
 
-  /* --- MODAL DE DETALHES DO PRODUTO (ENTRAR NO PRODUTO) --- */
+  /* --- MODAL DE DETALHES DO PRODUTO (QUICK VIEW RIGOROSO) --- */
   openProductModal(productId) {
+    if (!productId) return;
     const product = store.getProductById(productId);
-    if (!product || !this.productModalBackdrop) return;
+    if (!product || !this.productModalBackdrop || !product.studioImg) {
+      console.warn(`[FRZN UI] Tentativa de abrir modal com produto inválido ou sem mídia: ${productId}`);
+      return;
+    }
 
     this.currentModalProduct = product;
-    this.modalSelectedSize = null; // Trava de segurança FRZN2.pdf
+    this.modalSelectedSize = null;
 
-    // Imagem principal
+    // Imagem principal com transição suave e proteção contra src vazio
     if (this.modalMainImg) {
+      this.modalMainImg.style.opacity = '0';
       this.modalMainImg.src = product.studioImg;
       this.modalMainImg.alt = product.name;
+      this.modalMainImg.onload = () => {
+        this.modalMainImg.style.opacity = '1';
+      };
+      if (this.modalMainImg.complete) {
+        this.modalMainImg.style.opacity = '1';
+      }
     }
 
     // Miniaturas
     if (this.modalThumbsRow) {
       const images = [
         { src: product.studioImg, label: 'ESTÚDIO' },
-        { src: product.lifestyleImg, label: 'LOOKBOOK' },
-        ...(product.detailImg ? [{ src: product.detailImg, label: 'DETALHE' }] : [])
+        ...(product.lifestyleImg && product.lifestyleImg !== product.studioImg ? [{ src: product.lifestyleImg, label: 'LOOKBOOK' }] : []),
+        ...(product.detailImg && product.detailImg !== product.studioImg && product.detailImg !== product.lifestyleImg ? [{ src: product.detailImg, label: 'DETALHE' }] : [])
       ];
 
       this.modalThumbsRow.innerHTML = images.map((img, i) => `
@@ -397,28 +412,58 @@ export class UIManager {
       this.modalDesc.textContent = product.description;
     }
 
-    // Especificações técnicas
-    if (this.modalSpecsList && product.specs) {
-      this.modalSpecsList.innerHTML = Object.entries(product.specs).map(([key, val]) => `
-        <div class="modal-spec-row">
-          <span class="modal-spec-label">${key}</span>
-          <span class="modal-spec-value">${val}</span>
-        </div>
-      `).join('');
+    // Especificações técnicas dinâmicas
+    if (this.modalSpecsList) {
+      if (product.specs && Object.keys(product.specs).length > 0) {
+        this.modalSpecsList.style.display = 'grid';
+        this.modalSpecsList.innerHTML = Object.entries(product.specs).map(([key, val]) => `
+          <div class="modal-spec-row">
+            <span class="modal-spec-label">${key}</span>
+            <span class="modal-spec-value">${val}</span>
+          </div>
+        `).join('');
+      } else {
+        this.modalSpecsList.style.display = 'none';
+        this.modalSpecsList.innerHTML = '';
+      }
     }
 
-    // Tamanhos (nenhum pré-selecionado por padrão)
+    // Gerenciamento estrito de tamanhos (Eliminação rígida de seletores órfãos)
+    const hasValidSizes = Array.isArray(product.sizes) && product.sizes.length > 0;
+    const isSingleSize = hasValidSizes && (product.sizes.length === 1 || product.sizes[0] === 'TAMANHO ÚNICO' || product.sizes[0] === '45L');
+
+    if (this.modalSizeSelectorWrap) {
+      this.modalSizeSelectorWrap.style.display = hasValidSizes ? 'block' : 'none';
+    }
+
     if (this.modalSizesRow) {
-      this.modalSizesRow.innerHTML = product.sizes.map(sz => `
-        <button type="button" class="size-btn" data-size="${sz}" onclick="window.frznApp.ui.selectModalSize('${sz}', this)" data-cursor-label="TAM">${sz}</button>
-      `).join('');
+      if (hasValidSizes) {
+        this.modalSizesRow.innerHTML = product.sizes.map(sz => `
+          <button type="button" class="size-btn" data-size="${sz}" onclick="window.frznApp.ui.selectModalSize('${sz}', this)" data-cursor-label="TAM">${sz}</button>
+        `).join('');
+      } else {
+        this.modalSizesRow.innerHTML = '';
+      }
     }
 
-    // Botão Adicionar do Modal com trava inicial
+    // Configuração do botão adicionar com trava de segurança FRZN
     if (this.modalAddBtn) {
-      this.modalAddBtn.classList.add('is-locked');
       const span = this.modalAddBtn.querySelector('span');
-      if (span) span.textContent = 'SELECIONE O TAMANHO';
+
+      if (isSingleSize) {
+        this.modalSelectedSize = product.sizes[0];
+        this.modalAddBtn.classList.remove('is-locked');
+        if (span) span.textContent = `Adicionar à Sacola (${this.modalSelectedSize})`;
+        const singleBtn = this.modalSizesRow?.querySelector('.size-btn');
+        if (singleBtn) singleBtn.classList.add('selected', 'active');
+      } else if (hasValidSizes) {
+        this.modalAddBtn.classList.add('is-locked');
+        if (span) span.textContent = 'SELECIONE O TAMANHO';
+      } else {
+        this.modalSelectedSize = 'ÚNICO';
+        this.modalAddBtn.classList.remove('is-locked');
+        if (span) span.textContent = 'Adicionar à Sacola';
+      }
 
       this.modalAddBtn.onclick = () => {
         if (!this.modalSelectedSize) {
@@ -450,8 +495,8 @@ export class UIManager {
 
   selectModalSize(size, btn) {
     this.modalSelectedSize = size;
-    document.querySelectorAll('#modal-sizes-row .size-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
+    document.querySelectorAll('#modal-sizes-row .size-btn').forEach(b => b.classList.remove('selected', 'active'));
+    btn.classList.add('selected', 'active');
 
     if (this.modalAddBtn) {
       this.modalAddBtn.classList.remove('is-locked');
@@ -464,6 +509,11 @@ export class UIManager {
     if (this.productModalBackdrop) {
       this.productModalBackdrop.classList.remove('is-open');
       document.body.style.overflow = '';
+      this.currentModalProduct = null;
+      this.modalSelectedSize = null;
+      if (this.modalSizeSelectorWrap) {
+        this.modalSizeSelectorWrap.style.display = 'none';
+      }
     }
   }
 
@@ -472,14 +522,44 @@ export class UIManager {
       this.cartBackdrop.classList.add('is-open');
       this.cartDrawer.classList.add('is-open');
       document.body.style.overflow = 'hidden';
+
+      if (window.gsap) {
+        window.gsap.fromTo(this.cartDrawer,
+          { x: '100%' },
+          { x: '0%', duration: 0.6, ease: 'back.out(1.2)', overwrite: 'auto' }
+        );
+        window.gsap.fromTo(this.cartBackdrop,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.35, ease: 'power2.out', overwrite: 'auto' }
+        );
+      }
     }
   }
 
   closeCart() {
     if (this.cartDrawer && this.cartBackdrop) {
-      this.cartBackdrop.classList.remove('is-open');
-      this.cartDrawer.classList.remove('is-open');
-      document.body.style.overflow = '';
+      if (window.gsap) {
+        window.gsap.to(this.cartDrawer, {
+          x: '100%',
+          duration: 0.45,
+          ease: 'power3.in',
+          overwrite: 'auto',
+          onComplete: () => {
+            this.cartDrawer.classList.remove('is-open');
+            this.cartBackdrop.classList.remove('is-open');
+            document.body.style.overflow = '';
+          }
+        });
+        window.gsap.to(this.cartBackdrop, {
+          opacity: 0,
+          duration: 0.35,
+          overwrite: 'auto'
+        });
+      } else {
+        this.cartBackdrop.classList.remove('is-open');
+        this.cartDrawer.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
     }
   }
 
@@ -853,13 +933,98 @@ export class UIManager {
     }
   }
 
-  /* --- FLUXO DE CHECKOUT E PAGAMENTO --- */
+  /* --- FLUXO DE CHECKOUT E PAGAMENTO COM MÁSCARAS E VALIDAÇÃO --- */
+  initCheckoutMasks() {
+    // 1. Máscara CPF / CNPJ
+    const cpfInput = document.getElementById('chk-cpf');
+    if (cpfInput) {
+      cpfInput.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 14) v = v.slice(0, 14);
+        if (v.length <= 11) {
+          // CPF: 000.000.000-00
+          v = v.replace(/(\d{3})(\d)/, '$1.$2');
+          v = v.replace(/(\d{3})(\d)/, '$1.$2');
+          v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        } else {
+          // CNPJ: 00.000.000/0000-00
+          v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+          v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+          v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+          v = v.replace(/(\d{4})(\d)/, '$1-$2');
+        }
+        e.target.value = v;
+      });
+    }
+
+    // 2. Máscara CEP (00000-000)
+    const cepInput = document.getElementById('chk-cep');
+    if (cepInput) {
+      cepInput.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+        if (v.length > 5) {
+          v = v.replace(/^(\d{5})(\d)/, '$1-$2');
+        }
+        e.target.value = v;
+      });
+    }
+
+    // 3. Máscara Telefone ((00) 00000-0000)
+    const phoneInput = document.getElementById('chk-phone');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+        if (v.length > 10) {
+          v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+        } else if (v.length > 6) {
+          v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+        } else if (v.length > 2) {
+          v = v.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+        } else if (v.length > 0) {
+          v = v.replace(/^(\d{0,2})$/, '($1');
+        }
+        e.target.value = v;
+      });
+    }
+
+    // 4. Máscaras de Cartão de Crédito
+    const cardNumInput = document.querySelector('#pay-panel-card input[placeholder*="0000"]');
+    if (cardNumInput) {
+      cardNumInput.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0, 16);
+        v = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+        e.target.value = v;
+      });
+    }
+
+    const cardExpiryInput = document.querySelector('#pay-panel-card input[placeholder="MM/AA"]');
+    if (cardExpiryInput) {
+      cardExpiryInput.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+        if (v.length >= 2) {
+          v = v.slice(0, 2) + '/' + v.slice(2);
+        }
+        e.target.value = v;
+      });
+    }
+
+    const cardCvvInput = document.querySelector('#pay-panel-card input[placeholder="123"]');
+    if (cardCvvInput) {
+      cardCvvInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+      });
+    }
+  }
+
   openCheckoutModal() {
     const items = store.cart;
     if (items.length === 0) {
       this.showToast('Sua sacola ártica está vazia.');
       return;
     }
+
+    this.isOrderConfirmed = false;
+    this.currentCheckoutStep = 1;
 
     const backdrop = document.getElementById('checkout-modal');
     const container = document.getElementById('checkout-summary-items');
@@ -885,7 +1050,21 @@ export class UIManager {
     if (subtotalEl) subtotalEl.textContent = subtotalStr;
     if (totalEl) totalEl.textContent = subtotalStr;
 
-    this.goToCheckoutStep(1);
+    // Garante que o passo 1 esteja visível
+    [1, 2, 3].forEach(step => {
+      const panel = document.getElementById(`checkout-step-${step}`);
+      const pill = document.getElementById(`step-pill-${step}`);
+      if (panel) {
+        panel.style.display = step === 1 ? 'block' : 'none';
+        panel.style.opacity = step === 1 ? '1' : '0';
+        panel.style.transform = 'none';
+        panel.classList.toggle('active', step === 1);
+      }
+      if (pill) {
+        pill.classList.toggle('active', step === 1);
+      }
+    });
+
     this.closeCart();
 
     if (backdrop) {
@@ -899,28 +1078,89 @@ export class UIManager {
     if (backdrop) {
       backdrop.classList.remove('is-open');
       document.body.style.overflow = '';
+      this.isOrderConfirmed = false;
     }
   }
 
-  goToCheckoutStep(stepNumber) {
-    [1, 2, 3].forEach(step => {
-      const panel = document.getElementById(`checkout-step-${step}`);
-      const pill = document.getElementById(`step-pill-${step}`);
-      if (panel) {
-        if (step === stepNumber) {
-          panel.classList.add('active');
-        } else {
-          panel.classList.remove('active');
-        }
+  goToCheckoutStep(targetStep) {
+    if (targetStep === 2) {
+      const form = document.getElementById('form-shipping');
+      if (form && !form.checkValidity()) {
+        form.reportValidity();
+        this.showToast('Preencha todos os campos obrigatórios de envio.');
+        return;
       }
+
+      const cpfVal = document.getElementById('chk-cpf')?.value.replace(/\D/g, '') || '';
+      if (cpfVal.length < 11) {
+        this.showToast('Insira um CPF ou CNPJ válido para prosseguir.');
+        document.getElementById('chk-cpf')?.focus();
+        return;
+      }
+
+      const cepVal = document.getElementById('chk-cep')?.value.replace(/\D/g, '') || '';
+      if (cepVal.length < 8) {
+        this.showToast('Insira um CEP válido de 8 dígitos.');
+        document.getElementById('chk-cep')?.focus();
+        return;
+      }
+
+      const phoneVal = document.getElementById('chk-phone')?.value.replace(/\D/g, '') || '';
+      if (phoneVal.length < 10) {
+        this.showToast('Insira um telefone válido com DDD.');
+        document.getElementById('chk-phone')?.focus();
+        return;
+      }
+    }
+
+    const currentPanel = document.querySelector('.checkout-step-panel.active');
+    const nextPanel = document.getElementById(`checkout-step-${targetStep}`);
+    if (!nextPanel) return;
+
+    const goingForward = (this.currentCheckoutStep || 1) < targetStep;
+    this.currentCheckoutStep = targetStep;
+
+    // Atualiza pills dos passos
+    [1, 2, 3].forEach(step => {
+      const pill = document.getElementById(`step-pill-${step}`);
       if (pill) {
-        if (step === stepNumber) {
-          pill.classList.add('active');
-        } else {
-          pill.classList.remove('active');
-        }
+        pill.classList.toggle('active', step === targetStep);
       }
     });
+
+    // Animação GSAP de transição horizontal fluida entre etapas
+    if (window.gsap && currentPanel && currentPanel !== nextPanel) {
+      const outX = goingForward ? -35 : 35;
+      const inX = goingForward ? 35 : -35;
+
+      window.gsap.to(currentPanel, {
+        opacity: 0,
+        x: outX,
+        duration: 0.25,
+        ease: 'power2.in',
+        onComplete: () => {
+          currentPanel.classList.remove('active');
+          currentPanel.style.display = 'none';
+
+          nextPanel.style.display = 'block';
+          nextPanel.classList.add('active');
+          window.gsap.fromTo(nextPanel,
+            { opacity: 0, x: inX },
+            { opacity: 1, x: 0, duration: 0.35, ease: 'power2.out' }
+          );
+        }
+      });
+    } else {
+      [1, 2, 3].forEach(step => {
+        const p = document.getElementById(`checkout-step-${step}`);
+        if (p) {
+          p.style.display = step === targetStep ? 'block' : 'none';
+          p.classList.toggle('active', step === targetStep);
+          p.style.opacity = '1';
+          p.style.transform = 'none';
+        }
+      });
+    }
   }
 
   selectPaymentMethod(method) {
@@ -929,18 +1169,10 @@ export class UIManager {
       const btn = document.getElementById(`pay-tab-${t}`);
       const panel = document.getElementById(`pay-panel-${t}`);
       if (btn) {
-        if (t === method) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', t === method);
       }
       if (panel) {
-        if (t === method) {
-          panel.classList.add('active');
-        } else {
-          panel.classList.remove('active');
-        }
+        panel.classList.toggle('active', t === method);
       }
     });
   }
@@ -955,11 +1187,53 @@ export class UIManager {
   }
 
   confirmOrder(paymentMethod) {
+    if (store.getCartCount() === 0 && !this.isOrderConfirmed) {
+      this.showToast('Sua sacola ártica está vazia.');
+      return;
+    }
+
+    // Captura com segurança o Total e os dados ANTES de esvaziar a sacola
+    const finalSubtotal = store.getFormattedSubtotal();
+    const finalItemsCount = store.getCartCount();
     const orderCode = `FRZN-${Math.floor(1000 + Math.random() * 9000)}-BR`;
+
+    this.isOrderConfirmed = true;
+
     const codeEl = document.getElementById('success-order-code');
     if (codeEl) {
       codeEl.textContent = `CÓDIGO DE RASTREIO: ${orderCode}`;
     }
+
+    // Injeta comprovante com o TOTAL REAL preservado
+    const receiptEl = document.getElementById('confirmed-order-receipt');
+    if (receiptEl) {
+      receiptEl.innerHTML = `
+        <div class="receipt-box" style="background: rgba(122, 155, 181, 0.08); border: 1px solid rgba(122, 155, 181, 0.3); border-radius: 4px; padding: 20px; margin: 20px auto; max-width: 520px; text-align: left;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-ice-blue); letter-spacing: 0.1em; text-transform: uppercase;">MÉTODO SELECIONADO:</span>
+            <span style="font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; color: #FFFFFF;">${paymentMethod}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-ice-blue); letter-spacing: 0.1em; text-transform: uppercase;">EQUIPAMENTOS:</span>
+            <span style="font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; color: #FFFFFF;">${finalItemsCount} ${finalItemsCount === 1 ? 'item' : 'itens'}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-ice-blue); letter-spacing: 0.1em; text-transform: uppercase;">FRETE EXPRESSO:</span>
+            <span style="font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; color: var(--color-ice-blue);">GRÁTIS (EXPEDIÇÃO POLAR)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px dashed rgba(122, 155, 181, 0.35);">
+            <span style="font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase;">TOTAL PAGO:</span>
+            <span style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 800; color: var(--color-ice-blue);">${finalSubtotal}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Congela os números da coluna lateral direita com o Total real pago
+    const chkTotal = document.getElementById('chk-total-val');
+    const chkSubtotal = document.getElementById('chk-subtotal-val');
+    if (chkTotal) chkTotal.textContent = finalSubtotal;
+    if (chkSubtotal) chkSubtotal.textContent = finalSubtotal;
 
     this.goToCheckoutStep(3);
     store.clearCart();
