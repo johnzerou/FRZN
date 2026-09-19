@@ -269,8 +269,8 @@ export class UIManager {
       });
     }
 
-    // Inicializa comparador deslizante de fotos (DROP 02)
-    this.initPhotoSlider();
+    // Inicializa Hover Reveal Spotlight & Fallback Mobile (Svalbard Expedition)
+    this.initSpotlightHover();
 
     // Tecla ESC para fechar modais
     window.addEventListener('keydown', (e) => {
@@ -300,62 +300,152 @@ export class UIManager {
     this.renderProductGrids();
   }
 
-  initPhotoSlider() {
-    const slider = document.getElementById('drop2-photo-slider');
-    const afterImg = document.getElementById('photo-slider-after');
-    const handle = document.getElementById('photo-slider-handle');
-    if (!slider || !afterImg || !handle) return;
+  /* --- HOVER REVEAL COM SPOTLIGHT & FALLBACK MOBILE (SVALBARD EXPEDITION) --- */
+  initSpotlightHover() {
+    const container = document.getElementById('spotlight-compare-container');
+    const revealWrap = document.getElementById('spotlight-reveal-wrap');
+    const badge = document.getElementById('spotlight-hover-badge');
+    if (!container || !revealWrap) return;
 
-    const afterImgTag = afterImg.querySelector('img');
+    // Coordenadas reativas do cursor para interpolação suave
+    const coords = { x: container.offsetWidth / 2, y: container.offsetHeight / 2 };
 
-    const setInnerImgWidth = () => {
-      const rect = slider.getBoundingClientRect();
-      if (afterImgTag) {
-        afterImgTag.style.width = `${rect.width}px`;
-        afterImgTag.style.minWidth = `${rect.width}px`;
+    // GSAP quickTo para tracking a 60fps sem engasgos ou travamento
+    let setX = null;
+    let setY = null;
+    if (typeof gsap !== 'undefined' && gsap.quickTo) {
+      setX = gsap.quickTo(coords, 'x', {
+        duration: 0.22,
+        ease: 'power2.out',
+        onUpdate: () => {
+          revealWrap.style.setProperty('--spot-x', `${coords.x}px`);
+        }
+      });
+      setY = gsap.quickTo(coords, 'y', {
+        duration: 0.22,
+        ease: 'power2.out',
+        onUpdate: () => {
+          revealWrap.style.setProperty('--spot-y', `${coords.y}px`);
+        }
+      });
+    }
+
+    let isInside = false;
+
+    const onMouseEnter = (e) => {
+      // Ignora hover em viewport mobile / touch
+      if (window.matchMedia('(max-width: 768px), (hover: none)').matches) return;
+      isInside = true;
+
+      const rect = container.getBoundingClientRect();
+      const currentX = e.clientX - rect.left;
+      const currentY = e.clientY - rect.top;
+
+      coords.x = currentX;
+      coords.y = currentY;
+      revealWrap.style.setProperty('--spot-x', `${currentX}px`);
+      revealWrap.style.setProperty('--spot-y', `${currentY}px`);
+
+      if (typeof gsap !== 'undefined') {
+        gsap.to(revealWrap, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+        if (badge) {
+          badge.classList.add('is-visible');
+          gsap.fromTo(badge, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+        }
+      } else {
+        revealWrap.style.opacity = '1';
+        if (badge) badge.classList.add('is-visible');
       }
     };
 
-    setInnerImgWidth();
-    window.addEventListener('resize', setInnerImgWidth);
+    const onMouseMove = (e) => {
+      if (!isInside) return;
+      if (window.matchMedia('(max-width: 768px), (hover: none)').matches) return;
 
-    const updateSlider = (clientX) => {
-      const rect = slider.getBoundingClientRect();
-      if (afterImgTag && afterImgTag.style.width !== `${rect.width}px`) {
-        afterImgTag.style.width = `${rect.width}px`;
-        afterImgTag.style.minWidth = `${rect.width}px`;
+      const rect = container.getBoundingClientRect();
+      const targetX = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+      const targetY = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+
+      if (setX && setY) {
+        setX(targetX);
+        setY(targetY);
+      } else {
+        revealWrap.style.setProperty('--spot-x', `${targetX}px`);
+        revealWrap.style.setProperty('--spot-y', `${targetY}px`);
       }
-      const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-      const percent = (x / rect.width) * 100;
-      afterImg.style.width = `${percent}%`;
-      handle.style.left = `${percent}%`;
     };
 
-    let isDragging = false;
-
-    const onStart = (e) => {
-      isDragging = true;
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      updateSlider(clientX);
+    const onMouseLeave = () => {
+      isInside = false;
+      if (typeof gsap !== 'undefined') {
+        gsap.to(revealWrap, { opacity: 0, duration: 0.38, ease: 'power2.inOut' });
+        if (badge) {
+          gsap.to(badge, {
+            opacity: 0,
+            y: 6,
+            duration: 0.25,
+            ease: 'power2.in',
+            onComplete: () => badge.classList.remove('is-visible')
+          });
+        }
+      } else {
+        revealWrap.style.opacity = '0';
+        if (badge) badge.classList.remove('is-visible');
+      }
     };
 
-    const onMove = (e) => {
-      if (!isDragging) return;
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      updateSlider(clientX);
-    };
+    container.addEventListener('mouseenter', onMouseEnter);
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('mouseleave', onMouseLeave);
 
-    const onEnd = () => {
-      isDragging = false;
-    };
+    // Ajusta estado se houver redimensionamento de tela
+    window.addEventListener('resize', () => {
+      if (window.matchMedia('(max-width: 768px), (hover: none)').matches) {
+        revealWrap.style.opacity = '';
+        if (badge) badge.classList.remove('is-visible');
+      }
+    });
+  }
 
-    slider.addEventListener('mousedown', onStart);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onEnd);
+  /* Fallback Mobile: Alterna entre CAMPO e ESTÚDIO com suave crossfade e zoom */
+  switchSpotlightMobile(mode) {
+    const btnField = document.getElementById('btn-tab-field');
+    const btnStudio = document.getElementById('btn-tab-studio');
+    const revealWrap = document.getElementById('spotlight-reveal-wrap');
+    const baseImg = document.getElementById('spotlight-base-img');
 
-    slider.addEventListener('touchstart', onStart, { passive: true });
-    window.addEventListener('touchmove', onMove, { passive: true });
-    window.addEventListener('touchend', onEnd);
+    if (btnField) btnField.classList.toggle('active', mode === 'field');
+    if (btnStudio) btnStudio.classList.toggle('active', mode === 'studio');
+
+    if (!revealWrap) return;
+
+    if (mode === 'studio') {
+      if (typeof gsap !== 'undefined') {
+        gsap.killTweensOf(revealWrap);
+        gsap.fromTo(
+          revealWrap,
+          { opacity: 0, scale: 1.03 },
+          { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out' }
+        );
+      } else {
+        revealWrap.style.opacity = '1';
+      }
+    } else {
+      // Retorna para campo (lifestyle)
+      if (typeof gsap !== 'undefined') {
+        gsap.killTweensOf(revealWrap);
+        gsap.to(revealWrap, { opacity: 0, duration: 0.4, ease: 'power2.out' });
+        if (baseImg) {
+          gsap.fromTo(
+            baseImg,
+            { scale: 1.03 },
+            { scale: 1, duration: 0.45, ease: 'power2.out' }
+          );
+        }
+      } else {
+        revealWrap.style.opacity = '0';
+      }
+    }
   }
 
   /* --- MODAL DE DETALHES DO PRODUTO (QUICK VIEW RIGOROSO) --- */

@@ -460,19 +460,43 @@
             Engenharia de proteção para o paralelo 78° Norte. Peças equipadas com retenção de radiação infravermelha, malha Cordura® 1000D e conectores magnéticos Fidlock® acopláveis.
           </p>
 
-          <!-- Comparador de Fotos Deslizante Interativo (Estúdio vs. Campo Ártico) -->
-          <div style="margin-bottom: 24px;">
-            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-subtle-white); margin-bottom: 8px;">
-              <span>← FOTO EM CAMPO (LIFESTYLE)</span>
-              <span>FOTO ESTÚDIO (BLINDAGEM) →</span>
+          <!-- Visualizador Hover Reveal com Spotlight (Estúdio ↔ Campo) -->
+          <div class="spotlight-compare-section" style="margin-bottom: 24px;">
+            <!-- Fallback Mobile: Controles de Alternância CAMPO / ESTÚDIO -->
+            <div class="spotlight-mobile-tabs" id="spotlight-mobile-tabs" aria-label="Alternar Visão de Produto">
+              <button type="button" class="spotlight-tab-btn active" id="btn-tab-field" onclick="window.frznApp.ui.switchSpotlightMobile('field')">CAMPO</button>
+              <button type="button" class="spotlight-tab-btn" id="btn-tab-studio" onclick="window.frznApp.ui.switchSpotlightMobile('studio')">ESTÚDIO</button>
             </div>
 
-            <div class="photo-slider-wrap" id="drop2-photo-slider">
-              <img src="assets/images/glacier_studio.jpg" alt="Glacier Expedition Estúdio" class="photo-slider-img" loading="lazy" decoding="async">
-              <div class="photo-slider-after" id="photo-slider-after" style="width: 50%;">
-                <img src="assets/images/glacier_lifestyle.jpg" alt="Glacier Expedition Campo" loading="lazy" decoding="async">
+            <!-- Container Principal do Spotlight com Máscara Circular Suave -->
+            <div class="spotlight-compare-container" id="spotlight-compare-container" data-cursor-label="SPOTLIGHT">
+              <!-- Camada Base: Campo (Lifestyle) 100% visível por padrão -->
+              <img 
+                src="assets/images/glacier_lifestyle.jpg" 
+                alt="Parka Glacier em Expedição Ártica (Campo)" 
+                class="spotlight-base-img" 
+                id="spotlight-base-img"
+                loading="lazy" 
+                decoding="async"
+              >
+
+              <!-- Camada Revelada: Estúdio revelado apenas ao redor do cursor -->
+              <div class="spotlight-reveal-wrap" id="spotlight-reveal-wrap" aria-hidden="true">
+                <img 
+                  src="assets/images/glacier_studio.jpg" 
+                  alt="Parka Glacier Especificação Técnica (Estúdio)" 
+                  class="spotlight-reveal-img" 
+                  id="spotlight-reveal-img"
+                  loading="lazy" 
+                  decoding="async"
+                >
               </div>
-              <div class="photo-slider-handle" id="photo-slider-handle">↔</div>
+
+              <!-- Legenda discreta exibida durante o hover com fade in/out -->
+              <div class="spotlight-hover-badge" id="spotlight-hover-badge">
+                <span class="spotlight-badge-dot"></span>
+                <span>ESTÚDIO ↔ CAMPO</span>
+              </div>
             </div>
           </div>
 

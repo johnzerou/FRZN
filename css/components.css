@@ -1963,63 +1963,176 @@ html.lenis, html.lenis body {
   box-shadow: var(--shadow-ice-hover);
 }
 
-/* Interactive Photo Comparison Slider (Estúdio vs. Campo Ártico) */
-.photo-slider-wrap {
+/* ==========================================================================
+   SPOTLIGHT HOVER REVEAL & MOBILE FALLBACK (SVALBARD EXPEDITION)
+   ========================================================================== */
+.spotlight-compare-section {
+  position: relative;
+  width: 100%;
+}
+
+/* Fallback Mobile: Abas de texto CAMPO / ESTÚDIO */
+.spotlight-mobile-tabs {
+  display: none;
+  gap: 8px;
+  margin-bottom: 12px;
+  background: rgba(15, 22, 32, 0.7);
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: fit-content;
+}
+
+.spotlight-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-muted-white);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+}
+
+.spotlight-tab-btn.active {
+  background: rgba(122, 155, 181, 0.18);
+  color: var(--color-ice-white);
+  border: 1px solid var(--color-ice-blue-glow);
+  box-shadow: 0 0 12px rgba(122, 155, 181, 0.3);
+  font-weight: 600;
+}
+
+/* Container Principal do Spotlight */
+.spotlight-compare-container {
   position: relative;
   width: 100%;
   height: clamp(340px, 45vh, 480px);
   border-radius: 6px;
   overflow: hidden;
   border: var(--border-subtle);
+  background-color: var(--color-deep-navy);
   user-select: none;
-  cursor: ew-resize;
+  cursor: crosshair;
 }
 
-.photo-slider-img {
+/* Imagem Base: Campo / Lifestyle (100% visível por padrão) */
+.spotlight-base-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+  z-index: 1;
 }
 
-.photo-slider-after {
+/* Camada Revelada: Estúdio revelado via máscara radial com bordas suaves (feather/blur) */
+.spotlight-reveal-wrap {
   position: absolute;
   inset: 0;
-  width: 50%;
-  overflow: hidden;
-  border-right: 2px solid var(--color-ice-blue);
-  box-shadow: 0 0 15px rgba(122, 155, 181, 0.5);
-  transition: width 0.05s linear;
-}
-
-.photo-slider-after img {
-  position: absolute;
-  top: 0;
-  left: 0;
+  width: 100%;
   height: 100%;
-  max-width: none;
-  object-fit: cover;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  will-change: mask-image, -webkit-mask-image, opacity, transform;
+  /* Máscara circular suave com feathering radial ao redor do cursor */
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-radius: 165px;
+  -webkit-mask-image: radial-gradient(
+    circle var(--spot-radius) at var(--spot-x) var(--spot-y),
+    #000000 0%,
+    #000000 45%,
+    rgba(0, 0, 0, 0.8) 65%,
+    rgba(0, 0, 0, 0.35) 82%,
+    rgba(0, 0, 0, 0.08) 94%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle var(--spot-radius) at var(--spot-x) var(--spot-y),
+    #000000 0%,
+    #000000 45%,
+    rgba(0, 0, 0, 0.8) 65%,
+    rgba(0, 0, 0, 0.35) 82%,
+    rgba(0, 0, 0, 0.08) 94%,
+    transparent 100%
+  );
 }
 
-.photo-slider-handle {
+.spotlight-reveal-img {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--color-deep-navy);
-  border: 2px solid var(--color-ice-blue);
-  box-shadow: 0 0 20px var(--color-ice-blue-glow);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Legenda Discreta: Fade in/out durante o hover */
+.spotlight-hover-badge {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  background: rgba(10, 15, 22, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(122, 155, 181, 0.35);
+  border-radius: 100px;
+  padding: 6px 14px;
   color: var(--color-ice-white);
-  font-size: 12px;
-  z-index: 10;
-  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.spotlight-hover-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.spotlight-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-ice-blue);
+  box-shadow: 0 0 8px var(--color-ice-blue);
+  animation: pulseIce 2s infinite ease-in-out;
+}
+
+/* Responsividade Mobile (Telas Touch / <= 768px):
+   Sem hover, ativa as abas superiores e remove máscara para crossfade suave */
+@media (max-width: 768px), (hover: none) {
+  .spotlight-mobile-tabs {
+    display: flex;
+  }
+  
+  .spotlight-compare-container {
+    cursor: default;
+  }
+
+  .spotlight-reveal-wrap {
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    opacity: 0;
+  }
+
+  .spotlight-hover-badge {
+    display: none !important;
+  }
 }
 
 /* Technical X-Ray Overlay on Product Hover */
