@@ -543,7 +543,7 @@ export class UIManager {
 
     this.searchResults.innerHTML = matches.map(p => `
       <div class="cart-item" style="cursor: pointer;" onclick="window.frznApp.ui.closeSearch(); window.frznApp.ui.openProductModal('${p.id}');">
-        <img src="${p.studioImg}" class="cart-item-img" alt="${p.name}">
+        <img src="${p.studioImg}" class="cart-item-img" alt="${p.name}" loading="lazy" decoding="async">
         <div class="cart-item-details">
           <div class="cart-item-top">
             <h4 class="cart-item-title">${p.name}</h4>
@@ -657,12 +657,14 @@ export class UIManager {
             alt="${product.name} Vista Estúdio" 
             class="product-img product-img-studio" 
             loading="lazy"
+            decoding="async"
           >
           <img 
             src="${product.lifestyleImg}" 
             alt="${product.name} Vista Lookbook" 
             class="product-img product-img-lifestyle" 
             loading="lazy"
+            decoding="async"
           >
 
           <!-- Barra de Seleção Rápida de Tamanho no Hover -->

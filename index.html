@@ -374,10 +374,10 @@
       <div class="drop2-banner-grid">
         
         <!-- Coluna Esquerda: Pilha de Fotos em Camadas 3D (Photo Stack Layering) -->
-        <div class="photo-stack-wrapper reveal-item stagger-1" onclick="window.frznApp.ui.openProductModal('svalbard-stealth')" style="cursor: pointer;" title="Clique para ver detalhes da Svalbard Stealth Parka">
-          <div class="photo-stack-layer layer-back" style="background-image: url('assets/images/vortex_lifestyle.jpg');"></div>
-          <div class="photo-stack-layer layer-mid" style="background-image: url('assets/images/cargo_lifestyle.jpg');"></div>
-          <div class="photo-stack-layer layer-front" style="background-image: url('assets/images/vortex_studio.jpg');"></div>
+        <div class="photo-stack-wrapper reveal-item stagger-1" onclick="window.frznApp.ui.openProductModal('glacier-parka')" style="cursor: pointer;" title="Clique para ver detalhes da Parka Expedição Glacier">
+          <div class="photo-stack-layer layer-back" style="background-image: url('assets/images/glacier_lifestyle.jpg');"></div>
+          <div class="photo-stack-layer layer-mid" style="background-image: url('assets/images/tundra_lifestyle.jpg');"></div>
+          <div class="photo-stack-layer layer-front" style="background-image: url('assets/images/glacier_studio.jpg');"></div>
         </div>
 
         <!-- Coluna Direita: Detalhes do Lançamento & Comparador de Fotos Deslizante -->
@@ -405,9 +405,9 @@
             </div>
 
             <div class="photo-slider-wrap" id="drop2-photo-slider">
-              <img src="assets/images/vortex_studio.jpg" alt="Svalbard Estúdio" class="photo-slider-img">
+              <img src="assets/images/glacier_studio.jpg" alt="Glacier Expedition Estúdio" class="photo-slider-img" loading="lazy" decoding="async">
               <div class="photo-slider-after" id="photo-slider-after" style="width: 50%;">
-                <img src="assets/images/vortex_lifestyle.jpg" alt="Svalbard Campo">
+                <img src="assets/images/glacier_lifestyle.jpg" alt="Glacier Expedition Campo" loading="lazy" decoding="async">
               </div>
               <div class="photo-slider-handle" id="photo-slider-handle">↔</div>
             </div>
@@ -415,7 +415,7 @@
 
           <div style="display: flex; gap: 16px; align-items: center;">
             <button type="button" class="cta-pill-btn" onclick="window.frznApp.ui.filterByDrop('drop2')" data-cursor-label="DROP 02">
-              <span>EXPLORAR DROP 02 (7 NOVAS PEÇAS)</span>
+              <span>EXPLORAR DROP 02 (5 PEÇAS TÉCNICAS)</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
           </div>
@@ -473,6 +473,34 @@
             </div>
           </div>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- 4.8 SEÇÃO CINEMATOGRÁFICA FULL-SCREEN SCROLL EXPAND (EXPEDIÇÃO POLAR SVALBARD) -->
+    <section class="cinematic-expand-section" id="cinematic-expand" aria-label="Expedição Glacial Svalbard">
+      <div class="cinematic-expand-container">
+        <div class="cinematic-frame" id="cinematic-frame">
+          <img 
+            src="assets/images/glacier_cinematic_full.jpg" 
+            alt="Cordilheira Glacial de Svalbard em Alta Resolução" 
+            class="cinematic-expand-img"
+            id="cinematic-expand-img"
+            loading="lazy"
+            decoding="async"
+          >
+          <div class="cinematic-overlay" id="cinematic-overlay" aria-hidden="true"></div>
+          
+          <div class="cinematic-caption" id="cinematic-caption">
+            <div class="cinematic-badge">
+              <span class="pulse-badge" style="width: 6px; height: 6px; background: var(--color-ice-blue); border-radius: 50%;"></span>
+              EXPEDIÇÃO POLAR // PARALELO 78° N
+            </div>
+            <h2 class="cinematic-title">SVALBARD GLACIAL RIDGE</h2>
+            <p class="cinematic-desc">
+              Onde o vento glacial encontra a arquitetura do vestuário técnico de alta altitude. Engenharia forjada contra o frio absoluto.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -822,7 +850,6 @@
       <div class="footer-bottom-row">
         <span>© 2026 FRZN ARCTIC URBANO AG. TODOS OS DIREITOS RESERVADOS.</span>
         <span>TÓQUIO · BERLIM · OSLO</span>
-        <span>DESEMPENHO PREMIUM AWWWARDS</span>
       </div>
     </div>
   </footer>

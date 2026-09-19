@@ -30,10 +30,17 @@ export class SmoothScrollEngine {
   }
 
   init() {
+    let ticking = false;
     window.addEventListener('scroll', () => {
       this.targetY = window.scrollY;
-      this.checkHeader();
-      this.updateParallax(this.targetY);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          this.checkHeader();
+          this.updateParallax(this.targetY);
+          ticking = false;
+        });
+        ticking = true;
+      }
     }, { passive: true });
 
     window.addEventListener('resize', () => {
@@ -56,11 +63,12 @@ export class SmoothScrollEngine {
 
   updateParallax(scrollPos) {
     const viewHeight = window.innerHeight;
+    const hasGSAP = !!(window.gsap && window.ScrollTrigger);
 
-    // --- 1. HERO PARALLAX MULTICAMADA (FRZN2.pdf: Fundo 0.12x, Texto 1.0x) ---
-    if (scrollPos < viewHeight * 1.5) {
+    // --- 1. HERO PARALLAX (Apenas se GSAP não estiver gerenciando) ---
+    if (!hasGSAP && scrollPos < viewHeight * 1.5) {
       if (this.heroBg) {
-        const bgOffset = scrollPos * 0.12 * this.parallaxMultiplier; // 0.12x conforme FRZN2
+        const bgOffset = scrollPos * 0.12 * this.parallaxMultiplier;
         this.heroBg.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
       }
 
@@ -87,24 +95,26 @@ export class SmoothScrollEngine {
       }
     }
 
-    // --- 2. SEÇÃO DE COLEÇÕES EM SCROLL HORIZONTAL STICKY (FRZN2.pdf Page 3) ---
-    const horizSection = document.getElementById('horizontal-collections');
-    const horizContainer = document.getElementById('horizontal-track-container');
-    if (horizSection && horizContainer) {
-      const hRect = horizSection.getBoundingClientRect();
-      if (hRect.top < viewHeight && hRect.bottom > 0) {
-        const scrollRatio = Math.max(0, Math.min(1, (viewHeight - hRect.top) / (viewHeight + hRect.height)));
-        const maxScroll = horizContainer.scrollWidth - horizContainer.clientWidth;
-        horizContainer.scrollLeft = scrollRatio * maxScroll;
+    // --- 2. SEÇÃO DE COLEÇÕES EM SCROLL HORIZONTAL (Fallback quando sem GSAP) ---
+    if (!hasGSAP) {
+      const horizSection = document.getElementById('horizontal-collections');
+      const horizContainer = document.getElementById('horizontal-track-container');
+      if (horizSection && horizContainer) {
+        const hRect = horizSection.getBoundingClientRect();
+        if (hRect.top < viewHeight && hRect.bottom > 0) {
+          const scrollRatio = Math.max(0, Math.min(1, (viewHeight - hRect.top) / (viewHeight + hRect.height)));
+          const maxScroll = horizContainer.scrollWidth - horizContainer.clientWidth;
+          horizContainer.scrollLeft = scrollRatio * maxScroll;
+        }
       }
     }
 
-    // --- 3. MANIFESTO SECTION PARALLAX ---
-    if (this.manifestoSection) {
+    // --- 3. MANIFESTO SECTION PARALLAX (Fallback quando sem GSAP) ---
+    if (!hasGSAP && this.manifestoSection) {
       const rect = this.manifestoSection.getBoundingClientRect();
       if (rect.top < viewHeight && rect.bottom > 0) {
         const sectionScroll = viewHeight - rect.top;
-        const bgY = (sectionScroll * 0.12 * this.parallaxMultiplier) - 40; // 0.12x conforme FRZN2
+        const bgY = (sectionScroll * 0.12 * this.parallaxMultiplier) - 40;
         this.manifestoSection.style.backgroundPositionY = `calc(50% + ${bgY}px)`;
 
         if (this.manifestoContainer && !this.isMobile) {
@@ -133,41 +143,49 @@ export class SmoothScrollEngine {
     });
   }
 
-  /* Efeito de Inclinação Parallax 3D para Cards ao Mover o Mouse (Desktop) */
+  /* Efeito de Inclinação Parallax 3D Otimizado (Event Delegation Leve) */
   initCard3DTilt() {
     if (this.isMobile) return;
 
-    document.addEventListener('mousemove', (e) => {
-      const card = e.target.closest('.product-card, .info-card, .catalog-strip-banner');
-      if (!card) {
-        // Reset nos cards ativos anteriormente
-        document.querySelectorAll('.is-tilted').forEach(c => {
-          c.style.transform = '';
-          c.classList.remove('is-tilted');
-        });
-        return;
-      }
+    let activeCard = null;
 
-      card.classList.add('is-tilted');
-      const rect = card.getBoundingClientRect();
+    document.addEventListener('mouseover', (e) => {
+      const card = e.target.closest('.product-card, .info-card, .catalog-strip-banner');
+      if (card !== activeCard) {
+        if (activeCard) {
+          activeCard.style.transform = '';
+          activeCard.classList.remove('is-tilted');
+        }
+        activeCard = card;
+        if (activeCard) {
+          activeCard.classList.add('is-tilted');
+        }
+      }
+    }, { passive: true });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!activeCard) return;
+
+      const rect = activeCard.getBoundingClientRect();
       const cardWidth = rect.width;
       const cardHeight = rect.height;
 
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
 
-      const rotateX = ((mouseY / cardHeight) - 0.5) * -12; // máx 6 deg
-      const rotateY = ((mouseX / cardWidth) - 0.5) * 12;
+      const rotateX = ((mouseY / cardHeight) - 0.5) * -10;
+      const rotateY = ((mouseX / cardWidth) - 0.5) * 10;
 
-      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(8px)`;
-      card.style.transition = 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)';
-    });
+      activeCard.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(6px)`;
+      activeCard.style.transition = 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)';
+    }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
-      document.querySelectorAll('.is-tilted').forEach(c => {
-        c.style.transform = '';
-        c.classList.remove('is-tilted');
-      });
+      if (activeCard) {
+        activeCard.style.transform = '';
+        activeCard.classList.remove('is-tilted');
+        activeCard = null;
+      }
     });
   }
 

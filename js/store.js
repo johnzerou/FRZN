@@ -4,7 +4,7 @@
    =================================================================== */
 
 export const PRODUCTS = [
-  /* --- CATEGORIA 1: CASACOS (4 ITENS) --- */
+  /* --- CATEGORIA 1: CASACOS (3 ITENS) --- */
   {
     id: 'arctic-01',
     name: 'FRZN-01 Arctic Down Parka',
@@ -50,28 +50,6 @@ export const PRODUCTS = [
     }
   },
   {
-    id: 'polar-fleece',
-    name: 'Sub-Zero Alpine Polar Fleece',
-    category: 'Casacos',
-    drop: 'drop2',
-    price: 2980,
-    currency: 'R$',
-    formattedPrice: 'R$ 2.980,00',
-    studioImg: 'assets/images/subzero_studio.jpg',
-    lifestyleImg: 'assets/images/subzero_lifestyle.jpg',
-    detailImg: 'assets/images/subzero_studio.jpg',
-    sizes: ['PP', 'P', 'M', 'G', 'GG'],
-    badge: 'DROP 02 · CAMADA TÉRMICA',
-    tagline: 'Polartec® Thermal Pro · Painéis Ripstop · Bolsos Selados',
-    description: 'Segunda camada técnica de alto isolamento calor/peso. Confeccionada em Polartec® Thermal Pro com reforços de nylon Ripstop em zonas de fricção e gola de retenção de vento.',
-    specs: {
-      'Tecido Base': 'Polartec® Thermal Pro High-Loft',
-      'Reforços': 'Nylon Ripstop 70D',
-      'Retenção': 'Estrutura Alveolar de Retenção Térmica',
-      'Zíperes': 'YKK® Vislon® Invertidos'
-    }
-  },
-  {
     id: 'frost-anorak',
     name: 'Anorak Térmico Frost 3L',
     category: 'Casacos',
@@ -94,7 +72,7 @@ export const PRODUCTS = [
     }
   },
 
-  /* --- CATEGORIA 2: PARKAS (4 ITENS) --- */
+  /* --- CATEGORIA 2: PARKAS (3 ITENS) --- */
   {
     id: 'vortex-parka',
     name: 'Parka Técnica Vortex Down',
@@ -115,28 +93,6 @@ export const PRODUCTS = [
       'Tecido Externo': 'Cordura 500D Reforçada',
       'Forro': 'Mylar Prateado Termorrefletor',
       'Fechamento': 'Carcela Magnética com Trava Dupla'
-    }
-  },
-  {
-    id: 'svalbard-stealth',
-    name: 'FRZN-02 Svalbard Stealth Parka',
-    category: 'Parkas',
-    drop: 'drop2',
-    price: 8450,
-    currency: 'R$',
-    formattedPrice: 'R$ 8.450,00',
-    studioImg: 'assets/images/vortex_studio.jpg',
-    lifestyleImg: 'assets/images/vortex_lifestyle.jpg',
-    detailImg: 'assets/images/vortex_studio.jpg',
-    sizes: ['P', 'M', 'G', 'GG'],
-    badge: 'DROP 02 · EXCLUSIVO SVALBARD',
-    tagline: 'Tecnologia Infravermelha Stealth · Cordura 1000D · GORE-TEX Pro',
-    description: 'Desenvolvida no arquipélago de Svalbard. Escudo de proteção térmica e invisibilidade infravermelha com blindagem metálica de Cordura 1000D e capuz integrado com trava biométrica.',
-    specs: {
-      'Tecido Externo': 'Cordura 1000D Ultra-Resistente',
-      'Blindagem': 'Barreira de Retenção Infravermelha',
-      'Membrana': '3L GORE-TEX Pro 30.000mm',
-      'Isolamento': 'Pluma de Ganso 900+ Fill Power'
     }
   },
   {
@@ -184,7 +140,7 @@ export const PRODUCTS = [
     }
   },
 
-  /* --- CATEGORIA 3: CALÇAS (4 ITENS) --- */
+  /* --- CATEGORIA 3: CALÇAS (3 ITENS) --- */
   {
     id: 'cryo-cargo',
     name: 'Calça Tática Modular Cryo',
@@ -251,30 +207,8 @@ export const PRODUCTS = [
       'Elasticidade': 'Softshell Flex 3D'
     }
   },
-  {
-    id: 'subzero-pants',
-    name: 'Calça Tática Sub-Zero Pro',
-    category: 'Calças',
-    drop: 'drop1',
-    price: 3600,
-    currency: 'R$',
-    formattedPrice: 'R$ 3.600,00',
-    studioImg: 'assets/images/cargo_studio.jpg',
-    lifestyleImg: 'assets/images/cargo_lifestyle.jpg',
-    detailImg: 'assets/images/cargo_studio.jpg',
-    sizes: ['38', '40', '42', '44', '46'],
-    badge: 'RESISTÊNCIA EXTREMA',
-    tagline: 'Ripstop Cordura 500D · Tratamento Térmico · Costura Tripla',
-    description: 'Construção pesada em Cordura Ripstop 500D à prova de rasgos. Desenvolvida para resistir a atrito direto com gelo e superfícies rochosas brutais.',
-    specs: {
-      'Tecido': 'Cordura Ripstop 500D Tático',
-      'Reforço': 'Painéis Duplos nos Joelhos e Assento',
-      'Resistência': 'Resistência a Abrasão Grau Industrial',
-      'Zíperes': 'YKK Vislon Inoxidáveis'
-    }
-  },
 
-  /* --- CATEGORIA 4: ACESSÓRIOS (4 ITENS) --- */
+  /* --- CATEGORIA 4: ACESSÓRIOS (3 ITENS) --- */
   {
     id: 'glacial-balaclava',
     name: 'Balaclava Glacial & Goggles',
@@ -295,28 +229,6 @@ export const PRODUCTS = [
       'Ventilação': 'Portas Respiratórias Cortadas a Laser',
       'Isolamento': 'Fleece Corta-Vento Térmico Polar',
       'Ajuste': 'Fita Micrométrica de Fixação Posterior'
-    }
-  },
-  {
-    id: 'tactical-vest',
-    name: 'Colete Tático Modular Svalbard',
-    category: 'Acessórios',
-    drop: 'drop2',
-    price: 3650,
-    currency: 'R$',
-    formattedPrice: 'R$ 3.650,00',
-    studioImg: 'assets/images/cargo_studio.jpg',
-    lifestyleImg: 'assets/images/cargo_lifestyle.jpg',
-    detailImg: 'assets/images/cargo_studio.jpg',
-    sizes: ['P/M', 'G/GG'],
-    badge: 'DROP 02 · MODULAR TÁTICO',
-    tagline: 'Fivelas Magnéticas Fidlock® · Balaclava Acoplável · Sistema MOLLE',
-    description: 'Colete tático modular acolchoado com balaclava acoplável e bolsas removíveis com fecho magnético Fidlock. Projetado para mobilidade e acesso rápido a equipamentos no ambiente polar.',
-    specs: {
-      'Sistema': 'MOLLE Cortado a Laser',
-      'Ajuste': 'Fivelas Fidlock® V-Buckle 25mm',
-      'Acessório': 'Balaclava Polar Magnética Incluída',
-      'Tecido': 'Softshell DWR Quadridirecional'
     }
   },
   {
@@ -350,7 +262,7 @@ export const PRODUCTS = [
     currency: 'R$',
     formattedPrice: 'R$ 2.890,00',
     studioImg: 'assets/images/backpack_studio.jpg',
-    lifestyleImg: 'assets/images/backpack_studio.jpg',
+    lifestyleImg: 'assets/images/backpack_lifestyle.jpg',
     detailImg: 'assets/images/backpack_studio.jpg',
     sizes: ['45L'],
     badge: 'EQUIPAMENTO DE TRANSPORTE',

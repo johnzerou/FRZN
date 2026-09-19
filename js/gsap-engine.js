@@ -238,6 +238,89 @@ export class GSAPAnimationEngine {
           });
         }
 
+        /* 6.5. Seção Cinematográfica Full-Screen Scroll Expand (Expedição Svalbard) */
+        const cinematicSec = document.getElementById('cinematic-expand');
+        const cinematicFrame = document.getElementById('cinematic-frame');
+        const cinematicImg = document.getElementById('cinematic-expand-img');
+        const cinematicCaption = document.getElementById('cinematic-caption');
+        const cinematicOverlay = document.getElementById('cinematic-overlay');
+
+        if (cinematicSec && cinematicFrame) {
+          const expandTl = this.gsap.timeline({
+            scrollTrigger: {
+              trigger: cinematicSec,
+              start: 'top top',
+              end: '+=140%',
+              pin: true,
+              scrub: 0.8,
+              anticipatePin: 1
+            }
+          });
+
+          expandTl
+            .to(cinematicFrame, {
+              width: '100vw',
+              maxWidth: '100vw',
+              height: '100vh',
+              borderRadius: 0,
+              borderWidth: 0,
+              ease: 'none'
+            }, 0)
+            .to(cinematicImg, {
+              scale: 1.0,
+              ease: 'none'
+            }, 0)
+            .to(cinematicOverlay, {
+              opacity: 0.65,
+              ease: 'none'
+            }, 0.2)
+            .to(cinematicCaption, {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              ease: 'power2.out'
+            }, 0.45);
+        }
+
+      });
+
+      /* Suporte Mobile para a Expansão Cinematográfica */
+      mm.add("(max-width: 768px)", () => {
+        const cinematicSec = document.getElementById('cinematic-expand');
+        const cinematicFrame = document.getElementById('cinematic-frame');
+        const cinematicImg = document.getElementById('cinematic-expand-img');
+        const cinematicCaption = document.getElementById('cinematic-caption');
+
+        if (cinematicSec && cinematicFrame) {
+          const mobileTl = this.gsap.timeline({
+            scrollTrigger: {
+              trigger: cinematicSec,
+              start: 'top top',
+              end: '+=100%',
+              pin: true,
+              scrub: 0.5
+            }
+          });
+
+          mobileTl
+            .to(cinematicFrame, {
+              width: '100vw',
+              maxWidth: '100vw',
+              height: '100vh',
+              borderRadius: 0,
+              ease: 'none'
+            }, 0)
+            .to(cinematicImg, {
+              scale: 1.0,
+              ease: 'none'
+            }, 0)
+            .to(cinematicCaption, {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: 'power2.out'
+            }, 0.3);
+        }
       });
 
       /* -------------------------------------------------------------
